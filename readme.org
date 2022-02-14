@@ -26,3 +26,6 @@
 - 但我仍然需要对整个项目的screen, event flow以及navigation有很好的理解，
   才能真正完成填加一个用户自定义自己选择一种favoriate颜色的功能，努力
   理解实现中。。。。。。
+  
+[[./pic/theone.jpg]]
+
