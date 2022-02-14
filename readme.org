@@ -1,0 +1,14 @@
+#+latex_class: cn-article
+#+title: Android Compose
+#+author: deepwaterooo
+
+* Android Compose
+- Have been exposed to Kotlin a couple of years ago, had learned
+  languagel fundamentals, but have not really practices a lot...
+- Now finally I am exposed to this Jetpack Compose, and absolutely like it
+- By following this tutorial and tried to type some code using Android
+  Studio ide, I finally understand why nowadays, ide emacs keybindings
+  plugins are so popular...I have to get used to IDE emacs keybinding
+  programming too (now feels very wired typing in IDE...)
+- will get more practices on JetPack Compose......, and more practices
+  on Kotlin programming
