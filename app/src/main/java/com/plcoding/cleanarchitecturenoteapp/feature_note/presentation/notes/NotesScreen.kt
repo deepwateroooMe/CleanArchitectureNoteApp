@@ -89,6 +89,7 @@ fun NotesScreen(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+            // 功能上相当于传统layout中的listview自动填充..
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(state.notes) { note ->
                                          NoteItem(

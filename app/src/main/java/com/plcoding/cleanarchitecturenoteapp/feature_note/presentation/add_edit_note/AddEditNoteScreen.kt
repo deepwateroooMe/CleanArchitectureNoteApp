@@ -27,7 +27,7 @@ import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@Composable
+@Composable // 每条便签一编写界面
 fun AddEditNoteScreen (
     navController: NavController,
     noteColor: Int,

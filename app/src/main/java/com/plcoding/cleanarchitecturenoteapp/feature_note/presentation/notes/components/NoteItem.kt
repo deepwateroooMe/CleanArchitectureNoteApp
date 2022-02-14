@@ -26,7 +26,7 @@ import androidx.core.graphics.ColorUtils
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.NotesEvent
 
-@Composable // 每个条便签的显示界面
+@Composable // 每条便签在主界面中的显示界面
 fun NoteItem (
     note: Note,
     modifier: Modifier = Modifier,
@@ -37,7 +37,7 @@ fun NoteItem (
     Box (
         modifier = modifier
     ) {
-        // 第一行画五个圈，供用户选择颜色
+        // 画圆角矩形：并砍去折叠一个角
         Canvas(modifier = modifier.matchParentSize()) {
             val clipPath = Path().apply {
                 lineTo(size.width - cutCornerSize.toPx(), 0f)
@@ -84,6 +84,7 @@ fun NoteItem (
                 overflow = TextOverflow.Ellipsis
             )
         }
+        // 这里还是删除按钮
         IconButton(
             onClick = onDeleteClick,
             modifier = Modifier.align(Alignment.BottomEnd)

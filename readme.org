@@ -9,6 +9,7 @@
 - By following this tutorial and tried to type some code using Android
   Studio ide, I finally understand why nowadays, ide emacs keybindings
   plugins are so popular...I have to get used to IDE emacs keybinding
-  programming too (now feels very wired typing in IDE...)
+  programming too (currently feels very wired typing in IDE..., way
+  more comfortable coding using my emacs)
 - will get more practices on JetPack Compose......, and more practices
-  on Kotlin programming
+  on Kotlin programming too
