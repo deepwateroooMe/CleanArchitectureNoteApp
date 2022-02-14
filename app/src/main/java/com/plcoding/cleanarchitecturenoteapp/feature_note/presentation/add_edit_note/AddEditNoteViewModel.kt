@@ -63,6 +63,16 @@ class AddEditNoteViewModel @Inject constructor(
     }
     fun onEvent(event: AddEditNoteEvent) {
         when(event) {
+
+            // 选择一个favoriate颜色
+            is AddEditNoteEvent.PickAColor -> {
+                
+//                _noteColor.value = event.color
+            }
+            is AddEditNoteEvent.ChangeColor -> {
+                _noteColor.value = event.color
+            }
+
             is AddEditNoteEvent.EnteredTitle -> {
                 _noteTitle.value = noteTitle.value.copy(
                     text = event.value
@@ -85,9 +95,6 @@ class AddEditNoteViewModel @Inject constructor(
                             && _noteContent.value.text.isBlank()
                 )
             }     
-            is AddEditNoteEvent.ChangeColor -> {
-                _noteColor.value = event.color
-            }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {

@@ -7,9 +7,22 @@
   languagel fundamentals, but have not really practices a lot...
 - Now finally I am exposed to this Jetpack Compose, and absolutely like it
 - By following this tutorial and tried to type some code using Android
-  Studio ide, I finally understand why nowadays, ide emacs keybindings
-  plugins are so popular...I have to get used to IDE emacs keybinding
-  programming too (currently feels very wired typing in IDE..., way
-  more comfortable coding using my emacs)
+  Studio ide, I finally begin to think why nowadays, ide emacs keybindings
+  plugins are so popular...I want to configure and get use to some
+  majority of IDE emacs keybindings too (currently feels very wired
+  typing in IDE... Emacs has always been my main editor, and feel way
+  more comfortable coding using my emacs, but may/would learn to
+  switch to IDE when looking for errors, debugging and fixing bugs）
+  - 现在的IDE功能是狠强大，虽然自己只是个emacs弱弱，但是emacs是自己使
+    用多年，各种强大的功能仍然不是简单的IDE emacs keybindings就能比拟
+    的。Emacs仍将永远是自己开发的首选Editor，如果debug的时候不喜欢ide
+    emacs keybindings，等到闲暇时可能会像想要开发出记忆中的陈桥五笔输
+    入法一样自己去开发ide emacs pluging，把自己喜欢的功能全部
+    keybinding出来。。。。。。
 - will get more practices on JetPack Compose......, and more practices
   on Kotlin programming too
+- 整合了一个来自于godaddy的android compose colorpicker，目前只是做到了
+  build successfully(昨天晚上被block在这里，今天终于把这个给移除了)
+- 但我仍然需要对整个项目的screen, event flow以及navigation有很好的理解，
+  才能真正完成填加一个用户自定义自己选择一种favoriate颜色的功能，努力
+  理解实现中。。。。。。

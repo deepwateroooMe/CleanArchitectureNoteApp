@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -79,6 +80,19 @@ fun AddEditNoteScreen (
                 .background(noteBackgroundAnimatable.value)
                 .padding(16.dp)
         ) {
+            // 选择一个favoriate颜色: 现在是把它当作一个event事件在处理，但是你可能需要用到导航
+            ExtendedFloatingActionButton(
+                onClick = {
+                    viewModel.onEvent(AddEditNoteEvent.PickAColor)
+                },
+                icon = {
+                    Icon(
+                        Icons.Filled.Favorite,
+                        contentDescription = "Favorite"
+                    )
+                },
+                text = { Text("Like") }
+            )
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
@@ -95,6 +109,7 @@ fun AddEditNoteScreen (
                             .background(color)
                             .border(
                                 width = 3.dp,
+                                // 这里是画圆圈边圈的颜色
                                 color = if (viewModel.noteColor.value == colorInt) {
                                     Color.Black
                                 } else {
@@ -102,6 +117,7 @@ fun AddEditNoteScreen (
                                 },
                                 shape = CircleShape
                             )
+                        // 这里是需要分情况进行了，点到最后一个白色，会多出一个步骤：选择颜色
                             .clickable {
                                 scope.launch {
                                     noteBackgroundAnimatable.animateTo(
@@ -110,7 +126,13 @@ fun AddEditNoteScreen (
                                             durationMillis = 500
                                         )
                                     )
+                                    // 要考虑一下这里怎么把选择的颜色值给传回来
+                                    if (color == Color.White)
+                                        viewModel.onEvent(AddEditNoteEvent.PickAColor)
+
+                                    // else {
                                     viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
+                                    // }
                                 }
                             }
                     )

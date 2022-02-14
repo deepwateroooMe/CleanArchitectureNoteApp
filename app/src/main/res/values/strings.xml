@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CleanArchitectureNoteApp</string>
+    <string name="content_description_back_button">BACK</string>
+    <string name="classic_color_picker_sample">Classic Color Picker</string>
 </resources>

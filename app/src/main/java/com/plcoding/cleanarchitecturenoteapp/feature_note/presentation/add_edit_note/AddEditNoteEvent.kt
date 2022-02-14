@@ -8,7 +8,9 @@ sealed class AddEditNoteEvent {
     data class ChangeTitleFocus(val focusState: FocusState): AddEditNoteEvent()
     data class EnteredContent(val value: String):AddEditNoteEvent()
     data class ChangeContentFocus(val focusState: FocusState):AddEditNoteEvent()
-    data class ChangeColor(val color: Int): AddEditNoteEvent()
+
+    data class ChangeColor(val color: Int): AddEditNoteEvent() //
+    object PickAColor: AddEditNoteEvent()  // 点击最的一个白色，去选择一个颜色
 
     object SaveNote: AddEditNoteEvent()
 }

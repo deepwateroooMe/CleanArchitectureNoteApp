@@ -31,14 +31,12 @@ class MainActivity() : ComponentActivity() {
                 Surface(
                     color = colors.background
                 ) {
+                    // 导航
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
                         startDestination = Screen.NotesScreen.route
                     ) {
-                        composable(route = Screen.NotesScreen.route) {
-                            NotesScreen(navController = navController)
-                        }
                         composable(route = Screen.NotesScreen.route) {
                             NotesScreen(navController = navController)
                         }
