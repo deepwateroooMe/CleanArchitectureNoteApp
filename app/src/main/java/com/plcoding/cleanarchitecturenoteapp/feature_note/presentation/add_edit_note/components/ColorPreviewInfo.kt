@@ -19,25 +19,25 @@ import com.me.colorpicker.HsvColor
 @Composable
 fun ColorPreviewInfo(currentColor: Color) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        // a r g b 文本
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = "a: ${currentColor.alpha} \n" +
-            "r: ${currentColor.red} \n" +
-            "g: ${currentColor.green} \n" +
-            "b: ${currentColor.blue}"
-        )
+        // // a r g b 文本
+        // Text(
+        //     modifier = Modifier.padding(16.dp),
+        //     text = "a: ${currentColor.alpha} \n" +
+        //     "r: ${currentColor.red} \n" +
+        //     "g: ${currentColor.green} \n" +
+        //     "b: ${currentColor.blue}"
+        // )
         // 当前选定的颜色，圆形表示， 48.dp
         Spacer(
             modifier = Modifier
                 .background(
-                    currentColor,
+                    currentColor, //
                     shape = CircleShape
                 )
-                .size(48.dp)
+                .size(50.dp)
                 .align(Alignment.CenterHorizontally)
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
     }
 }
 
@@ -48,8 +48,8 @@ fun ColorPaletteBar(
     colors: List<HsvColor>
 ) {
     LazyVerticalGrid(
-        //        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        //        verticalArrangement = Arrangement.spacedBy(4.dp),
+//                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+//                    verticalArrangement = Arrangement.spacedBy(4.dp),
         cells = GridCells.Adaptive(48.dp),
         modifier = modifier
             .fillMaxWidth(),

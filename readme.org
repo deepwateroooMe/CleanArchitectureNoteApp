@@ -23,9 +23,26 @@
   on Kotlin programming too
 - 整合了一个来自于godaddy的android compose colorpicker，目前只是做到了
   build successfully(昨天晚上被block在这里，今天终于把这个给移除了)
+  - compose color picker库来自于：
+    https://github.com/godaddy/compose-color-picker
+  - 因为对项目中screen, event等感觉理解得还不够透彻，所以想要试图添加
+    一些功能来进一步地练习
+  - 可以直接build.gradle引入第三方库，但为练习的目的，我还是直接把相关
+    的一个一个文件自己试图建一个项目中的library,果然在build的过程中遇
+    到过一点儿小问题，练习一遍的目的大概就在于此吧。。。
 - 但我仍然需要对整个项目的screen, event flow以及navigation有很好的理解，
-  才能真正完成填加一个用户自定义自己选择一种favoriate颜色的功能，努力
-  理解实现中。。。。。。
+  才能真正完成填加一个用户自定义自己选择一种favoriate颜色的功能
+  - 原本以为进一步在点击自定义背景颜色的按钮后增加一个screen会很容易，
+    但这里我的思维仍然还不够清楚；也尝试过NavController的解决办法，仍
+    然有些思绪不够清楚。。。最终想到了一个最简单的解决办法：在现有架构
+    的基础上，模仿toggle sort options的办法，用最后一个圈来toggle
+    color picker，并自底向上根据viewmodel中现便签颜色值的变化来数据驱
+    动更新UI(现便签的背景颜色，以及画圈),最后一个思路很简单比较容易实
+    现
+  - 这里在用最简单的办法解决自己的问题的时候，新产生了一个bug：不是自
+    定义颜色的时候会有两个黑圈，并且有一个黑圈还不对应现背景颜色，还没
+    想清楚这个bug产生的原因，会把它fix掉
+    - 这里事件的传递顺序上还有一点儿问题，事件的选择顺序有点儿不对？！
   
-[[./pic/theone.jpg]]
+[[./pic/screens3.png]]
 

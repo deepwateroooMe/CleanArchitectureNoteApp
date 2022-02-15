@@ -73,6 +73,7 @@ fun NotesScreen(
                     )
                 }
             }
+            // 排序栏 是 可见 可不见的，根据用户的点击状态来决定是否可见
             AnimatedVisibility(
                 visible = state.isOrderSectionVisible,
                 enter = fadeIn() + slideInVertically(),

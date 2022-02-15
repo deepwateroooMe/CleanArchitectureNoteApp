@@ -1,5 +1,6 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
@@ -10,6 +11,7 @@ import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.InvalidNo
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.use_case.NoteUseCases
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.NoteColorState
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.NoteTextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,6 +24,7 @@ class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val TAG = "test AddEditNoteViewModel"
 
     private val _noteTitle = mutableStateOf(NoteTextFieldState(
         hint = "Enter title..."
@@ -33,8 +36,10 @@ class AddEditNoteViewModel @Inject constructor(
     ))
     val noteContent: State<NoteTextFieldState> = _noteContent
 
-    private val _noteColor = mutableStateOf<Int>(Note.noteColors.random().toArgb())
-    val noteColor: State<Int> = _noteColor
+    // private val _noteColor = mutableStateOf<Int>(Note.noteColors.random().toArgb())
+    // val noteColor: State<Int> = _noteColor
+    private val _noteColor = mutableStateOf<NoteColorState>(NoteColorState(Note.noteColors.random().toArgb(), false))
+    val noteColor: State<NoteColorState> = _noteColor
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -55,7 +60,11 @@ class AddEditNoteViewModel @Inject constructor(
                             text = note.content,
                             isHintVisible = false
                         )
-                        _noteColor.value = note.color
+                        // _noteColor.value = note.color
+                        _noteColor.value = noteColor.value.copy(
+                            color = noteColor.value.color,
+                            // isColorSectionVisible = noteColor.value.isColorSectionVisible
+                        )
                     }
                 }
             }
@@ -63,14 +72,43 @@ class AddEditNoteViewModel @Inject constructor(
     }
     fun onEvent(event: AddEditNoteEvent) {
         when(event) {
+            is AddEditNoteEvent.SaveNote -> {
+                viewModelScope.launch {
+                    try {
+                        noteUseCases.addNote(
+                            Note(
+                                title = noteTitle.value.text,
+                                content = noteContent.value.text,
+                                timeStamp = System.currentTimeMillis(),
+                                color = noteColor.value.color,
+                                id = currentNoteId
+                            )
+                        )
+                        _eventFlow.emit(UiEvent.SaveNote)
+                    } catch (e: InvalidNoteException) {
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                message = e.message ?: "Coundn't save note"
+                            )
+                        )
+                    }
+                }
+            }
 
-            // 选择一个favoriate颜色
-            is AddEditNoteEvent.PickAColor -> {
-                
+            // 选择一个favoriate颜色: 这里要理解一下event的事件传递方向
+            is AddEditNoteEvent.ToggleColorSection -> {
+                _noteColor.value = noteColor.value.copy(
+                    isColorSectionVisible = !noteColor.value.isColorSectionVisible
+                )
 //                _noteColor.value = event.color
             }
             is AddEditNoteEvent.ChangeColor -> {
-                _noteColor.value = event.color
+                Log.d(TAG, "event.color: " + event.color)
+                 _noteColor.value.color = event.color.toArgb()
+//                _noteColor.value = event.noteColorState.value.copy(
+//                    color = noteColor.value.color,
+//                    isColorSectionVisible = noteColor.value.isColorSectionVisible
+//                )
             }
 
             is AddEditNoteEvent.EnteredTitle -> {
@@ -95,32 +133,12 @@ class AddEditNoteViewModel @Inject constructor(
                             && _noteContent.value.text.isBlank()
                 )
             }     
-            is AddEditNoteEvent.SaveNote -> {
-                viewModelScope.launch {
-                    try {
-                        noteUseCases.addNote(
-                            Note(
-                                title = noteTitle.value.text,
-                                content = noteContent.value.text,
-                                timeStamp = System.currentTimeMillis(),
-                                color = noteColor.value,
-                                id = currentNoteId
-                            )
-                        )
-                        _eventFlow.emit(UiEvent.SaveNote)
-                    } catch (e: InvalidNoteException) {
-                        _eventFlow.emit(
-                            UiEvent.ShowSnackbar(
-                                message = e.message ?: "Coundn't save note"
-                            )
-                        )
-                    }
-                }
-            }
         }
     }
     sealed class UiEvent {
         data class ShowSnackbar(val message: String): UiEvent()
         object SaveNote: UiEvent()
+
+        object PickAColor: UiEvent()
     }
 }
