@@ -3,6 +3,12 @@
 #+author: deepwaterooo
 
 * Android Compose
+- 加载图片：希望能够实现更多的功能：在不同的位置加载图片，有的位置可以
+  出来，有的位置却不可以，最开始是在出不来的位置测试，浪费了很多时间，
+  放到正确的位置，却很容易就出来了，会把图片的功能link好
+- 但希望能够实现更多好玩儿的功能
+
+
 - Have been exposed to Kotlin a couple of years ago, had learned
   languagel fundamentals, but have not really practices a lot...
 - Now finally I am exposed to this Jetpack Compose, and absolutely like it
@@ -21,8 +27,6 @@
     keybinding出来。。。。。。
 - will get more practices on JetPack Compose......, and more practices
   on Kotlin programming too
-
-- 加载图片：希望能够实现更多的功能
 
 - 整合了一个来自于godaddy的android compose colorpicker，目前只是做到了
   build successfully(昨天晚上被block在这里，今天终于把这个给移除了)
