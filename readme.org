@@ -21,6 +21,9 @@
     keybinding出来。。。。。。
 - will get more practices on JetPack Compose......, and more practices
   on Kotlin programming too
+
+- 加载图片：希望能够实现更多的功能
+
 - 整合了一个来自于godaddy的android compose colorpicker，目前只是做到了
   build successfully(昨天晚上被block在这里，今天终于把这个给移除了)
   - compose color picker库来自于：

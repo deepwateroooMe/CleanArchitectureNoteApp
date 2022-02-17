@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -58,7 +59,8 @@ fun NotesScreen(
             ) {
                 // 首页标题行：Your note，以及排序搭按钮
                 Text(
-                    text = "Your note",
+                    text = "☆❤ My Notes ❤☆",
+                    color = Color.Blue,
                     style = MaterialTheme.typography.h4
                 )
                 // 便签排序

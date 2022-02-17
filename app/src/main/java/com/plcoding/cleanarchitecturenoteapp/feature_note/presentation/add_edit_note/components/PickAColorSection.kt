@@ -17,15 +17,18 @@ import com.me.colorpicker.ClassicColorPicker
 import com.me.colorpicker.HsvColor
 import com.plcoding.cleanarchitecturenoteapp.R
 
-@Composable // 排序toggle显示的排序选项界面
+// Stateful composable 转换为 Stateless composable 的方法:
+// 一个 State 对象需要使用 2 个函数参数来进行替换：
+//   value: T：由原 state 对象所持有并需要被显示的值。
+//   onValueChange: (T) -> Unit：由原 stateful composable 中会改变原 state 状态变化的代码，以回调方式将改变后的值，同步到持有 state 的 composable 去更新。如果改变状态的回调函数较多，这里也可以接收一个带多个函数的接口作为参数。
+
+@Composable // 排序toggle显示的排序选项界面, 是一个Stateless composable
 fun PickAColorSection (
     modifier: Modifier = Modifier,
     noteColor: Color = Color.White,
     onColorChange: (Color) -> Unit
 ) {
   val TAG = "test PickAColorSection"
-
-//  val scope = rememberCoroutineScope()
 
     Column {
 //         // Classic Color Picker
@@ -51,12 +54,12 @@ fun PickAColorSection (
                 .height(300.dp)
                 .padding(16.dp),
             onColorChanged = {
-                    hsvColor: HsvColor ->
-                        //                                   // Triggered when the color changes, do something with the newly picked color here!
-                    Log.d(TAG, "onColorChanged()")
-                               currentColor.value = hsvColor.toColor()
-                               onColorChange(currentColor.value)
-                               
+                hsvColor: HsvColor ->
+                    // Triggered when the color changes, do something with the newly picked color here!
+                Log.d(TAG, "onColorChanged()")
+                currentColor.value = hsvColor.toColor()
+                onColorChange(currentColor.value)
+                
             }
         )
     }

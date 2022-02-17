@@ -46,7 +46,7 @@ fun NoteItem (
                 lineTo(0f, size.height)
                 close()
             }
-            clipPath(clipPath) {
+            clipPath(clipPath) { 
                 drawRoundRect(
                     color = Color(note.color),
                     size = size,

@@ -12,8 +12,9 @@ sealed class AddEditNoteEvent {
 
     data class ChangeColor(val color: Color): AddEditNoteEvent() //
 
-    // object PickAColor: PickAColorEvent()  // 点击最的一个白色，去选择一个颜色
+    // 加载图片：先只考虑本地的
+    data class LoadImage(val url: String): AddEditNoteEvent()
+    
     object ToggleColorSection: AddEditNoteEvent()
-
     object SaveNote: AddEditNoteEvent()
 }

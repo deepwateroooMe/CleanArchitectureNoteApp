@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,6 +47,9 @@ class AddEditNoteViewModel @Inject constructor(
 
     private var currentNoteId: Int? = null
 
+//     private val _noteImage = mutableStateOf(ImageState())
+//     val noteImage: State<ImageState> = _noteImage
+
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
             if (noteId != -1) {
@@ -63,7 +67,7 @@ class AddEditNoteViewModel @Inject constructor(
                         // _noteColor.value = note.color
                         _noteColor.value = noteColor.value.copy(
                             color = noteColor.value.color,
-                            // isColorSectionVisible = noteColor.value.isColorSectionVisible
+                            isColorSectionVisible = noteColor.value.isColorSectionVisible
                         )
                     }
                 }
@@ -81,6 +85,7 @@ class AddEditNoteViewModel @Inject constructor(
                                 content = noteContent.value.text,
                                 timeStamp = System.currentTimeMillis(),
                                 color = noteColor.value.color,
+                                null,
                                 id = currentNoteId
                             )
                         )
@@ -100,17 +105,21 @@ class AddEditNoteViewModel @Inject constructor(
                 _noteColor.value = noteColor.value.copy(
                     isColorSectionVisible = !noteColor.value.isColorSectionVisible
                 )
-//                _noteColor.value = event.color
             }
             is AddEditNoteEvent.ChangeColor -> {
-                Log.d(TAG, "event.color: " + event.color)
                  _noteColor.value.color = event.color.toArgb()
 //                _noteColor.value = event.noteColorState.value.copy(
 //                    color = noteColor.value.color,
 //                    isColorSectionVisible = noteColor.value.isColorSectionVisible
 //                )
             }
-
+//            // hard coded
+//            is AddEditNoteEvent.LoadImage -> {
+//                _noteImage.value = noteImage.value.copy(
+//                    text = event.value
+//                )
+//                // val url = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
+//            }
             is AddEditNoteEvent.EnteredTitle -> {
                 _noteTitle.value = noteTitle.value.copy(
                     text = event.value
