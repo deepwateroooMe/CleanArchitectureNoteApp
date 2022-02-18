@@ -3,11 +3,45 @@
 #+author: deepwaterooo
 
 * Android Compose
+** current update
+- 把Jetpack compose相机、读取媒体图片文件的权限申请加入到项目中，并实
+  现每个Notes中图片的存储与读取
+  
+[[./pic/screens2.png]]
+  
+[[./pic/screens5.png]]
+
+- 真正写的过程中会遇到问题，解决问题的过程才是真正有意义价值，帮助自己
+  成长的，所以还是想要多写一些
+** TOTO: 
+*** 会整合更多的功能到项目中，把自己想要实现的feature全部实现出来
+*** BUGS to be fixed: 
+- bug #1: 被我导入的两个黑圈：如果我定义了圆圈的黑圈描边，那么会仍然需
+  要控制变量、当点击了其它背景颜色时来取消现自定义黑圈边，不如暂且简单
+  不管它（暂时埋掉了）
+- BUG #2: 当用户自定义选择颜色时，爱心形状的图标，不知道是哪里的原因，
+  残留了一个背景圆圈的背景，需要fix掉
+- BUG #3: 当用户自定义颜色的中途选择了保存，当再次加载时，自定义长方形
+  区小圆圈所标定的最后一次选定颜色值是对的，但小圆圈的位置不对，影响用
+  户体验
+** prev updates
 - 加载图片：希望能够实现更多的功能：在不同的位置加载图片，有的位置可以
   出来，有的位置却不可以，最开始是在出不来的位置测试，浪费了很多时间，
   放到正确的位置，却很容易就出来了，会把图片的功能link好
-- 但希望能够实现更多好玩儿的功能
+  
+[[./pic/screens.png]]
 
+- 整合了一个来自于godaddy的android compose colorpicker，目前只是做到了
+  build successfully(昨天晚上被block在这里，今天终于把这个给移除了)
+  - compose color picker库来自于：
+    https://github.com/godaddy/compose-color-picker
+  - 因为对项目中screen, event等感觉理解得还不够透彻，所以想要试图添加
+    一些功能来进一步地练习
+  - 可以直接build.gradle引入第三方库，但为练习的目的，我还是直接把相关
+    的一个一个文件自己试图建一个项目中的library,果然在build的过程中遇
+    到过一点儿小问题，练习一遍的目的大概就在于此吧。。。
+  
+[[./pic/screens3.png]]
 
 - Have been exposed to Kotlin a couple of years ago, had learned
   languagel fundamentals, but have not really practices a lot...
@@ -28,15 +62,6 @@
 - will get more practices on JetPack Compose......, and more practices
   on Kotlin programming too
 
-- 整合了一个来自于godaddy的android compose colorpicker，目前只是做到了
-  build successfully(昨天晚上被block在这里，今天终于把这个给移除了)
-  - compose color picker库来自于：
-    https://github.com/godaddy/compose-color-picker
-  - 因为对项目中screen, event等感觉理解得还不够透彻，所以想要试图添加
-    一些功能来进一步地练习
-  - 可以直接build.gradle引入第三方库，但为练习的目的，我还是直接把相关
-    的一个一个文件自己试图建一个项目中的library,果然在build的过程中遇
-    到过一点儿小问题，练习一遍的目的大概就在于此吧。。。
 - 但我仍然需要对整个项目的screen, event flow以及navigation有很好的理解，
   才能真正完成填加一个用户自定义自己选择一种favoriate颜色的功能
   - 原本以为进一步在点击自定义背景颜色的按钮后增加一个screen会很容易，
@@ -49,7 +74,4 @@
   - 这里在用最简单的办法解决自己的问题的时候，新产生了一个bug：不是自
     定义颜色的时候会有两个黑圈，并且有一个黑圈还不对应现背景颜色，还没
     想清楚这个bug产生的原因，会把它fix掉
-    - 这里事件的传递顺序上还有一点儿问题，事件的选择顺序有点儿不对？！
-  
-[[./pic/screens3.png]]
 

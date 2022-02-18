@@ -1,5 +1,6 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -17,35 +18,31 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.plcoding.cleanarchitecturenoteapp.R
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.AddEditNoteViewModel
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.PickAColorSection
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.*
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.DEFAULT_RECIPE_IMAGE
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.GallerySelect
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.loadPicture
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalAnimationApi::class)
+// 这里面关于相机的部分的状态没有理清楚，所以导致了图片选择库这个地方有个blocking bug，have to fix before moving on
+@OptIn(ExperimentalAnimationApi::class,
+    com.google.accompanist.permissions.ExperimentalPermissionsApi::class
+)
 @Composable // 每条便签一编写界面
 fun AddEditNoteScreen (
     navController: NavController,
@@ -56,7 +53,14 @@ fun AddEditNoteScreen (
 
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
-    val state = viewModel.noteColor.value
+    val colorState = viewModel.noteColor.value
+    val colorCusState = viewModel.noteCusColor.value
+    val imageState = viewModel.noteImage.value
+
+    val imageUri = viewModel.imgUri
+    var showGallery = viewModel.showGallery
+
+    // var showImage = viewModel.showImage.value
 
     val scaffoldState = rememberScaffoldState()
 
@@ -68,18 +72,12 @@ fun AddEditNoteScreen (
 
     val scope = rememberCoroutineScope()
 
-    val url = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
-//    val imageState = ImageUtil(
-//        context = LocalContext.current,
-//        url = url,
-//    )
-
     // LaunchEffect允许我们在Composable中使用协程
     // 让Composable支持协程的重要意义是，可以让一些简单的业务逻辑直接以Composable的形式封装并实现复用，而无需额外借助ViewModel
     // key1 = true so that execute only once
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
-            when(event) {
+            when (event) {
                 is AddEditNoteViewModel.UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
@@ -91,7 +89,7 @@ fun AddEditNoteScreen (
             }
         }
     }
-    Scaffold (
+    Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -105,38 +103,35 @@ fun AddEditNoteScreen (
         },
         scaffoldState = scaffoldState
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(noteBackgroundAnimatable.value)
                 .padding(16.dp)
         ) {
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Note.noteColors.forEach {
-                    color -> 
-                        val colorInt = color.toArgb()
-                    Box (
+                Note.noteColors.forEach { color ->
+                    val colorInt = color.toArgb()
+                    Box(
                         modifier = Modifier
                             .size(50.dp)
-                            .shadow(15.dp, CircleShape)
+                            .shadow(10.dp, CircleShape)
                             .background(color)
-                        // 这里把边框去掉了，只是埋掉了一个bug，因为我新的兴趣在，暂时不处理这个bug,改天回来再改
-                            // .border(
-                            //     width = 3.dp,
+                            // 这里把边框去掉了，只是埋掉了一个bug，因为我有新的兴趣在，暂时不处理这个bug,改天回来再改
+                            // .border(width = 3.dp,
                             //     // 这里是画圆圈边圈的颜色:感觉更新得不对，总是上一次的颜色在画圈
                             //     color = if (viewModel.noteColor.value.color == colorInt) {
                             //         Color.Black
-                            //     } else {
+                            //     } else 
                             //         Color.Transparent
                             //     },
                             //     shape = CircleShape
                             // )
-                            // 这里是需要分情况进行了，点到最后一个白色，会多出一个步骤：选择颜色
                             .clickable {
                                 scope.launch {
                                     noteBackgroundAnimatable.animateTo(
@@ -150,26 +145,25 @@ fun AddEditNoteScreen (
                             }
                     )
                 }
-                IconButton( // 用户自定义颜色: 心形需要画得再大一点儿
-                            onClick = {
-                                viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
-                            },
-                ) { 
-                    // Box (
-                    //     modifier = Modifier
+                IconButton(
+                    onClick = { // BUG #2: 自定义颜色：这里不知道是哪里的原因，残留了一个背景圆圈的背景，需要fix掉
+                        viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
+                    },
+                ) {
+                    // Box (modifier = Modifier
                     //         .size(50.dp)
                     //         .shadow(15.dp, CircleShape)
                     //         .background(
-                    //             // 这里把它设定为了state值更新前的value，即上一次选定的颜色，所以会受其它按钮的影响，可以用一个值把它记住，就不会悥记了
+                    //             // 这里把它设定为了colorState值更新前的value，即上一次选定的颜色，所以会受其它按钮的影响，可以用一个值把它记住，就不会悥记了
                     //             // Color(if (Note.cusColor != -1) Note.cusColor else viewModel.noteColor.value.color), // 这里仍然不对
-                    //             Color(state.color), 
+                    //             Color(colorState.color), 
                     //             shape = CircleShape // 想把这里改成心形
                     //         )
-                    //     // // 如果我定义了圆圈的黑圈描边，那么会仍然需要控制变量、当点击了其它背景颜色时来取消现自定义黑圈边，不如暂且简单不管它
+                    //     // // bug #1: 如果我定义了圆圈的黑圈描边，那么会仍然需要控制变量、当点击了其它背景颜色时来取消现自定义黑圈边，不如暂且简单不管它
                     //     //     .border(
                     //     //         width = 3.dp,
                     //     //         // 这里是画圆圈边圈的颜色
-                    //     //         color = if (Color(state.color) != Color.Black) {
+                    //     //         color = if (Color(colorState.color) != Color.Black) {
                     //     //             Color.Black
                     //     //         } else {
                     //     //             Color.Transparent
@@ -181,40 +175,30 @@ fun AddEditNoteScreen (
                         imageVector = Icons.Filled.Favorite,
                         contentDescription = "Favorite",
                         modifier = Modifier.size(150.dp),
-                        tint = (if (state.color == -1) Color.Red else Color(state.color))
+                        tint = (if (colorCusState == -1) Color.Red else Color(colorCusState))
                     )
                 }
-                IconButton( // 再加一个imagebutton
-                            onClick = {
-                                Log.d(TAG, "imageButon() onClick()")
-//                               viewModel.onEvent(AddEditNoteEvent.LoadImage(url))
-                            },
-                ) { 
+                IconButton(
+                    // 再加一个 选择图片 imagebutton, 再加一个相机
+                    onClick = {
+                        Log.d(TAG, "onClick toggleImageSection")
+                        // viewModel.onEvent(AddEditNoteEvent.ToggleGallerySection)
+                        viewModel.onEvent(AddEditNoteEvent.ToggleImageSection)
+                    },
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Image,
                         contentDescription = "Images",
                         modifier = Modifier.size(150.dp)
                     )
+                    Text("Img")
                 }
-                // Card(modifier = Modifier
-                //          .padding(4.dp)
-                //          .clickable { }) {
-                //     //如果图片加载成功
-                //     imageState.value?.let {
-                //         Image(
-                //             bitmap = it.asImageBitmap(),
-                //             contentDescription = "",
-                //             modifier = Modifier
-                //                 .padding(4.dp)
-                //                 .fillMaxWidth()
-                //         )
-                //     }
-                // }
             }
             Spacer(modifier = Modifier.height(16.dp))
+
             // 选择自定义颜色栏 是 可见 可不见的，根据用户的点击状态来决定是否可见
             AnimatedVisibility(
-                visible = state.isColorSectionVisible,
+                visible = colorState.isColorSectionVisible,
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
@@ -222,46 +206,27 @@ fun AddEditNoteScreen (
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-                    noteColor = Color(state.color),
+                    noteColor = Color(colorState.color),
                     onColorChange = {
                         viewModel.onEvent(AddEditNoteEvent.ChangeColor(it))
                         scope.launch {
                             noteBackgroundAnimatable.animateTo(
-                                targetValue = it, 
+                                targetValue = it,
                                 animationSpec = tween(
                                     durationMillis = 500
                                 )
                             )
-                            // viewModel.onEvent(AddEditNoteEvent.ChangeColor(Color(state.color)))
+                            viewModel.onEvent(AddEditNoteEvent.ChangeCusColor(it))
                         }
                     }
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Image( // 本地png图片，ok
-                painter = painterResource(R.drawable.img),
-                contentDescription = "icon"
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            val image = loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).value
-            image?.let { img ->
-                             Image(
-                                 bitmap = img.asImageBitmap(),
-                                 contentDescription = "loaded internet imgaes",
-                                 modifier = Modifier
-                                     .fillMaxWidth()
-                                     .height(225.dp),
-                                 contentScale = ContentScale.Crop,
-                             )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-            
             TransparentHintTextField(
                 text = titleState.text,
                 hint = titleState.hint,
                 onValueChange = {
-                                viewModel.onEvent((AddEditNoteEvent.EnteredTitle(it)))
+                    viewModel.onEvent((AddEditNoteEvent.EnteredTitle(it)))
                 },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
@@ -269,7 +234,7 @@ fun AddEditNoteScreen (
                 isHintVisible = titleState.isHintVisible,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.h5,
-                modifier = Modifier 
+                modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
@@ -283,21 +248,39 @@ fun AddEditNoteScreen (
                 },
                 isHintVisible = contentState.isHintVisible,
                 textStyle = MaterialTheme.typography.body1,
-                modifier = Modifier.fillMaxHeight()
+                // modifier = Modifier.fillMaxHeight() // 因为这里已经占据了整个屏幕，你是看不见后面再加的图片的
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
-
-
-            // Spacer(modifier = Modifier.height(16.dp))
-                            //            LazyColumn {
-                                // LoadPicture(url = url)
-                                //     val urls = arrayListOf<String>()
-            //     for (i in 500..501){urls.add("https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/$i/featured_image.png")}
-            //     itemsIndexed(urls){ _ , url -> LoadPicture(url = url)}
-//            }
-            // Image(bitmap = ImageBitmap.imageResource(id = R.mipmap.ic_launcher),
-            //       contentDescription = "icon"
-            // )            
+            
+            // // 加载图片栏： 是 可见 可不见的，根据用户的点击状态来决定是否可
+            Log.d(TAG, "imageState.isImageSectionVisible: " + imageState.isImageSectionVisible)
+            AnimatedVisibility(
+                // visible = showGallery.value,// 不 work
+                visible = imageState.isImageSectionVisible,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                ImageMainContent(
+                    // modifier: Modifier = Modifier,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(top = 8.dp) // adding some space to the label
+                        .background(Color(colorState.color)),
+                    // imageUri,
+                    // showGallery,
+//                    showGallerySelect
+                    viewModel
+                )
+                // ImageMainContent(
+                //     modifier = Modifier
+                //         .fillMaxWidth()
+                //         .fillMaxHeight()
+                //         .padding(top = 8.dp) // adding some space to the label
+                //         .background(Color(colorState.color))
+                // )
+            }
         }
     }
 }

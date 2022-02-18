@@ -1,7 +1,6 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.plcoding.cleanarchitecturenoteapp.ui.*
@@ -16,7 +15,12 @@ data class Note(
     // 这里数据库没有保存toggle状态，所以不会回复颜色值的toggle状态
     // 同理，数据库没有保存最后一次用户自定义的颜色，所以也不会回复
     val color: Int,
-    val url: String?,
+    val isColorSectionVisible: Boolean,
+    val cusColor: Int,
+
+    var uri: String,
+    var isImageSectionVisible: Boolean,
+    var url: String,
 
     @PrimaryKey val id: Int? = null
 ) {

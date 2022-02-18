@@ -27,40 +27,40 @@ fun ColorPreviewInfo(currentColor: Color) {
         //     "g: ${currentColor.green} \n" +
         //     "b: ${currentColor.blue}"
         // )
-        // 当前选定的颜色，圆形表示， 48.dp
-        Spacer(
-            modifier = Modifier
-                .background(
-                    currentColor, //
-                    shape = CircleShape
-                )
-                .size(50.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        Spacer(Modifier.height(8.dp))
+        // // 当前选定的颜色，圆形表示， 48.dp
+        // Spacer(
+        //     modifier = Modifier
+        //         .background(
+        //             currentColor, //
+        //             shape = CircleShape
+        //         )
+        //         .size(50.dp)
+        //         .align(Alignment.CenterHorizontally)
+        // )
+        // Spacer(Modifier.height(8.dp))
     }
 }
 
-@Composable
-@OptIn(ExperimentalFoundationApi::class)
-fun ColorPaletteBar(
-    modifier: Modifier = Modifier,
-    colors: List<HsvColor>
-) {
-    LazyVerticalGrid(
-//                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-//                    verticalArrangement = Arrangement.spacedBy(4.dp),
-        cells = GridCells.Adaptive(48.dp),
-        modifier = modifier
-            .fillMaxWidth(),
-        contentPadding = PaddingValues(16.dp),
-        content = {
-            items(colors) {
-                i ->
-                    Canvas(modifier = Modifier.size(48.dp)) {
-                        drawCircle(i.toColor())
-                    }
-            }
-        }
-    )
-}
+// @Composable
+// @OptIn(ExperimentalFoundationApi::class)
+// fun ColorPaletteBar(
+//     modifier: Modifier = Modifier,
+//     colors: List<HsvColor>
+// ) {
+//     LazyVerticalGrid(
+// //                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+// //                    verticalArrangement = Arrangement.spacedBy(4.dp),
+//         cells = GridCells.Adaptive(48.dp),
+//         modifier = modifier
+//             .fillMaxWidth(),
+//         contentPadding = PaddingValues(16.dp),
+//         content = {
+//             items(colors) {
+//                 i ->
+//                     Canvas(modifier = Modifier.size(48.dp)) {
+//                         drawCircle(i.toColor())
+//                     }
+//             }
+//         }
+//     )
+// }
