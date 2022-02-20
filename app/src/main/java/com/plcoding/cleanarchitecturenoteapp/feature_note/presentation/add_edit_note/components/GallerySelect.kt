@@ -19,8 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.EMPTY_IMAGE_URI
 
-// const val EMPTY_IMAGE_URI = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
-
 @Composable
 fun GallerySelect(
     modifier: Modifier = Modifier,
@@ -32,8 +30,6 @@ fun GallerySelect(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
-            Log.d(TAG, "onResult bef onImageUri")
-            Log.d(TAG, "uri.toString(): " + uri.toString())
             onImageUri((uri ?: EMPTY_IMAGE_URI) as Uri)
         }
     )

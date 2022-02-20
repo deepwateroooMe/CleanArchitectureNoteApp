@@ -1,20 +1,8 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.provider.MediaStore
-import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.Toast
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -49,7 +37,7 @@ class AddEditNoteViewModel @Inject constructor(
     ))
     val noteContent: State<NoteTextFieldState> = _noteContent
 
-    private val _noteColor = mutableStateOf<NoteColorState>(NoteColorState(Note.noteColors.random().toArgb(), false))
+    private val _noteColor = mutableStateOf<NoteColorState>(NoteColorState(Note.noteColors.random().toArgb(), false, -1))
     val noteColor: State<NoteColorState> = _noteColor
     private val _noteCusColor = mutableStateOf<Int>(-1)
     val noteCusColor: State<Int> = _noteCusColor
@@ -86,7 +74,8 @@ class AddEditNoteViewModel @Inject constructor(
                             )
                             _noteColor.value = noteColor.value.copy(
                                 color = note.color,
-                                isColorSectionVisible = note.isColorSectionVisible
+                                isColorSectionVisible = note.isColorSectionVisible,
+                                cusColor = note.cusColor
                             )
                             _noteCusColor.value = note.cusColor
                             if (note.url != null || note.uri != "") {
@@ -138,21 +127,24 @@ class AddEditNoteViewModel @Inject constructor(
                 )
             }
             is AddEditNoteEvent.ChangeColor -> {
-                _noteColor.value.color = event.color.toArgb()
+                 _noteColor.value.color = event.color.toArgb()
+//                _noteColor.value = noteColor.value.copy(
+//                    color = noteColor.value.color
+//                )
             }
-            is AddEditNoteEvent.ChangeCusColor -> {
-                _noteCusColor.value = event.color.toArgb()
+            is AddEditNoteEvent.ChangeCusColor -> { // 
+                 _noteCusColor.value = event.color.toArgb()
+//                _noteCusColor.value = noteCusColor.value
+                _noteColor.value.color = noteCusColor.value
             }
 
             is AddEditNoteEvent.ToggleImageSection -> {
-                Log.d(TAG, "ToggleImageSection")
                 _showGallery.value = !showGallery.value
                 _noteImage.value = noteImage.value.copy(
                     isImageSectionVisible = !noteImage.value.isImageSectionVisible
                 )
             }
             is AddEditNoteEvent.LoadImageUri -> {
-                Log.d(TAG, "event.uri.toString(): " + event.toString())
                 _imgUri = imgUri
                 _noteImage.value.uri = imgUri.value
             }
@@ -192,7 +184,6 @@ class AddEditNoteViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowSnackbar(val message: String): UiEvent()
         object SaveNote: UiEvent()
-
         object PickAColor: UiEvent()
     }
 }

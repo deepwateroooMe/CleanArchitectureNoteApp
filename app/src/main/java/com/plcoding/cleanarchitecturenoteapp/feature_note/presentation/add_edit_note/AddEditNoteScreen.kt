@@ -60,13 +60,12 @@ fun AddEditNoteScreen (
     val imageUri = viewModel.imgUri
     var showGallery = viewModel.showGallery
 
-    // var showImage = viewModel.showImage.value
-
     val scaffoldState = rememberScaffoldState()
 
     val noteBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColorState.color != -1) noteColorState.color else viewModel.noteColor.value.color)
+            // Color(if (noteColorState.color != -1) noteColorState.color else viewModel.noteColor.value.color)
+            Color(if (noteColorState.color != -1) noteColorState.color else colorState.color)
         )
     }
 
@@ -94,7 +93,6 @@ fun AddEditNoteScreen (
             FloatingActionButton(
                 onClick = {
                     viewModel.onEvent(AddEditNoteEvent.SaveNote)
-                    // navController.navigate(AddEditNoteScreen.route) // 拿来参考的,没用上
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -120,27 +118,24 @@ fun AddEditNoteScreen (
                     Box(
                         modifier = Modifier
                             .size(50.dp)
-                            .shadow(10.dp, CircleShape)
+                            .shadow(15.dp, CircleShape)
+                            .clip(CircleShape)
                             .background(color)
-                            // 这里把边框去掉了，只是埋掉了一个bug，因为我有新的兴趣在，暂时不处理这个bug,改天回来再改
-                            // .border(width = 3.dp,
-                            //     // 这里是画圆圈边圈的颜色:感觉更新得不对，总是上一次的颜色在画圈
-                            //     color = if (viewModel.noteColor.value.color == colorInt) {
-                            //         Color.Black
-                            //     } else 
-                            //         Color.Transparent
-                            //     },
-                            //     shape = CircleShape
-                            // )
+                            .border(width = 3.dp,
+                                color = if (colorState.color == colorInt) {
+                                    Color.Black
+                                } else Color.Transparent,
+                                shape = CircleShape
+                            )
                             .clickable {
                                 scope.launch {
+                                    viewModel.onEvent(AddEditNoteEvent.ChangeColor(color))
                                     noteBackgroundAnimatable.animateTo(
                                         targetValue = Color(colorInt),
                                         animationSpec = tween(
                                             durationMillis = 500
                                         )
                                     )
-                                    viewModel.onEvent(AddEditNoteEvent.ChangeColor(color))
                                 }
                             }
                     )
@@ -150,39 +145,37 @@ fun AddEditNoteScreen (
                         viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
                     },
                 ) {
-                    // Box (modifier = Modifier
-                    //         .size(50.dp)
-                    //         .shadow(15.dp, CircleShape)
-                    //         .background(
-                    //             // 这里把它设定为了colorState值更新前的value，即上一次选定的颜色，所以会受其它按钮的影响，可以用一个值把它记住，就不会悥记了
-                    //             // Color(if (Note.cusColor != -1) Note.cusColor else viewModel.noteColor.value.color), // 这里仍然不对
-                    //             Color(colorState.color), 
-                    //             shape = CircleShape // 想把这里改成心形
-                    //         )
-                    //     // // bug #1: 如果我定义了圆圈的黑圈描边，那么会仍然需要控制变量、当点击了其它背景颜色时来取消现自定义黑圈边，不如暂且简单不管它
-                    //     //     .border(
-                    //     //         width = 3.dp,
-                    //     //         // 这里是画圆圈边圈的颜色
-                    //     //         color = if (Color(colorState.color) != Color.Black) {
-                    //     //             Color.Black
-                    //     //         } else {
-                    //     //             Color.Transparent
-                    //     //         },
-                    //     //         shape = CircleShape
-                    //     //     )
-                    // )
                     Icon(
                         imageVector = Icons.Filled.Favorite,
                         contentDescription = "Favorite",
                         modifier = Modifier.size(150.dp),
                         tint = (if (colorCusState == -1) Color.Red else Color(colorCusState))
                     )
+//                     Box (modifier = Modifier
+//                             .size(50.dp)
+//                             .shadow(15.dp, CircleShape)
+//                             .background(
+//                                 // 这里把它设定为了colorState值更新前的value，即上一次选定的颜色，所以会受其它按钮的影响，可以用一个值把它记住，就不会悥记了
+//                                 // Color(if (Note.cusColor != -1) Note.cusColor else viewModel.noteColor.value.color), // 这里仍然不对
+// //                                Color(colorCusState),
+//                                 Color.Transparent,
+//                                 shape = CircleShape // 想把这里改成心形
+//                             )
+//                         // 如果我定义了圆圈的黑圈描边，那么需要根据背景的颜色来判断：当前背景是否是自定义的背景，是则描黑边，否则就透明不描
+//                             .border(
+//                                 width = 3.dp,
+//                                 color = if (Color(colorCusState) != noteBackgroundAnimatable.value) {
+//                                     Color.Transparent
+//                                 } else {
+//                                     Color.Black
+//                                 },
+//                                 shape = CircleShape
+//                             )
+//                     )
                 }
                 IconButton(
-                    // 再加一个 选择图片 imagebutton, 再加一个相机
                     onClick = {
                         Log.d(TAG, "onClick toggleImageSection")
-                        // viewModel.onEvent(AddEditNoteEvent.ToggleGallerySection)
                         viewModel.onEvent(AddEditNoteEvent.ToggleImageSection)
                     },
                 ) {
@@ -191,7 +184,6 @@ fun AddEditNoteScreen (
                         contentDescription = "Images",
                         modifier = Modifier.size(150.dp)
                     )
-                    Text("Img")
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -206,7 +198,9 @@ fun AddEditNoteScreen (
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-                    noteColor = Color(colorState.color),
+
+                    noteColor = (if (colorCusState == -1) Color.Red else Color(colorCusState)),
+
                     onColorChange = {
                         viewModel.onEvent(AddEditNoteEvent.ChangeColor(it))
                         scope.launch {
@@ -253,33 +247,20 @@ fun AddEditNoteScreen (
             )
             Spacer(modifier = Modifier.height(16.dp))
             
-            // // 加载图片栏： 是 可见 可不见的，根据用户的点击状态来决定是否可
-            Log.d(TAG, "imageState.isImageSectionVisible: " + imageState.isImageSectionVisible)
+            // 加载图片栏： 是 可见 可不见的，根据用户的点击状态来决定是否可
             AnimatedVisibility(
-                // visible = showGallery.value,// 不 work
                 visible = imageState.isImageSectionVisible,
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
                 ImageMainContent(
-                    // modifier: Modifier = Modifier,
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .padding(top = 8.dp) // adding some space to the label
                         .background(Color(colorState.color)),
-                    // imageUri,
-                    // showGallery,
-//                    showGallerySelect
                     viewModel
                 )
-                // ImageMainContent(
-                //     modifier = Modifier
-                //         .fillMaxWidth()
-                //         .fillMaxHeight()
-                //         .padding(top = 8.dp) // adding some space to the label
-                //         .background(Color(colorState.color))
-                // )
             }
         }
     }

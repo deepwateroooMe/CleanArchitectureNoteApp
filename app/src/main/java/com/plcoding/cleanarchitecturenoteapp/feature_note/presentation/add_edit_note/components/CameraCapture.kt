@@ -44,6 +44,8 @@ fun CameraCapture(
     cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA,
     onImageFile: (File) -> Unit = { }
 ) {
+     val TAG = "test CameraCapture"
+
     val context = LocalContext.current
     MyNotesPermissions(
         permission = permission.CAMERA,
@@ -91,53 +93,57 @@ fun CameraCapture(
                         .align(Alignment.BottomCenter),
                     onClick = {
                         coroutineScope.launch {
-                            // 在另一个文件中，它居然会笨到找不到！！！
                             imageCaptureUseCase.takePicture(context.executor).let {
+                                // Log.d(TAG, "image file path: ")
+                                // Log.d(TAG, "it..getAbsolutePath(): " + it.getAbsolutePath())
                                 onImageFile(it)
                             }
-                            // imageCaptureUseCase.takePicture(context.executor, onImageFile())
                         }
                     }
                 )
             }
             LaunchedEffect(previewUseCase) {
-               val cameraProvider = context.getCameraProvider()
-               try {
-                   // Must unbind the use-cases before rebinding them.
-                   cameraProvider.unbindAll()
-                   cameraProvider.bindToLifecycle(
-                       lifecycleOwner, cameraSelector, previewUseCase, imageCaptureUseCase
-                   )
-               } catch (ex: Exception) {
-                   Log.e("CameraCapture", "Failed to bind camera use cases", ex)
-               }
+                val cameraProvider = context.getCameraProvider()
+                try {
+                    // Must unbind the use-cases before rebinding them.
+                    cameraProvider.unbindAll()
+                    cameraProvider.bindToLifecycle(
+                        lifecycleOwner, cameraSelector, previewUseCase, imageCaptureUseCase
+                    )
+                } catch (ex: Exception) {
+                    Log.e("CameraCapture", "Failed to bind camera use cases", ex)
+                }
             }
         }
     }
 }
-
+// 按下拍照后的处理：会捕捉异常
 suspend fun ImageCapture.takePicture(executor: Executor): File {
+    // 创建图片文件，并捕捉异常
     val photoFile = withContext(Dispatchers.IO) {
         kotlin.runCatching {
+            Log.d("test takePicture", "runCatching create image tmp file")
             File.createTempFile("image", "jpg")
         }.getOrElse { ex ->
                           Log.e("TakePicture", "Failed to create temporary file", ex)
                       File("/dev/null")
         }
     }
-
+    // 文件创建成功后，等待拍照，并把图片内容存入该文件
     return suspendCoroutine {
         continuation ->
             val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
         takePicture(
-            outputOptions, executor,
+            outputOptions,
+            executor,
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    // 当拍照、图片文件保存成功后，回调，挂起函数从这里继续执行
                     continuation.resume(photoFile)
                 }
-
                 override fun onError(ex: ImageCaptureException) {
                     Log.e("TakePicture", "Image capture failed", ex)
+                    // 挂起函数从这里继续执行
                     continuation.resumeWithException(ex)
                 }
             }

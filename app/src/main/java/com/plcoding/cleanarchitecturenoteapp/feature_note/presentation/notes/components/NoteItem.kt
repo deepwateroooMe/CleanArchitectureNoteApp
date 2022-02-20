@@ -1,6 +1,8 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.components
 
+import android.net.Uri
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -20,10 +23,13 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
+import coil.compose.rememberImagePainter
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.EMPTY_IMAGE_URI
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.NotesEvent
 
 @Composable // 每条便签在主界面中的显示界面
@@ -34,7 +40,7 @@ fun NoteItem (
     cutCornerSize: Dp = 30.dp,
     onDeleteClick: () -> Unit
 ) {
-    Box (
+    Box(
         modifier = modifier
     ) {
         // 画圆角矩形：并砍去折叠一个角
@@ -46,7 +52,7 @@ fun NoteItem (
                 lineTo(0f, size.height)
                 close()
             }
-            clipPath(clipPath) { 
+            clipPath(clipPath) {
                 drawRoundRect(
                     color = Color(note.color),
                     size = size,
@@ -62,37 +68,84 @@ fun NoteItem (
                 )
             }
         }
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .padding(end = 32.dp)
-        ) {
-            Text(
-                text = note.title,
-                style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = note.content,
-                style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.onSurface,
-                maxLines = 10,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        // 这里还是删除按钮
-        IconButton(
-            onClick = onDeleteClick,
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Delete note"
-            )
+        // 这里的条件判断不太好
+        if (Uri.parse(note.uri) == EMPTY_IMAGE_URI) { 
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .padding(end = 32.dp)
+            ) {
+                Text(
+                    text = note.title,
+                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colors.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = note.content,
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface,
+                    maxLines = 10,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            // 这里还是删除按钮
+            IconButton(
+                onClick = onDeleteClick,
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete note"
+                )
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .width(280.dp)
+                    .padding(16.dp)
+                    .padding(end = 32.dp)
+            ) {
+                Text(
+                    text = note.title,
+                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colors.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = note.content,
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface,
+                    maxLines = 10,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            // 如果有图片，这里加上图片
+            if (Uri.parse(note.uri) != EMPTY_IMAGE_URI) {
+                Image(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .padding(32.dp)
+                        .align(Alignment.TopEnd),
+                    painter = rememberImagePainter(Uri.parse(note.uri)),
+                    contentDescription = ""
+                )
+            }
+            // 这里还是删除按钮
+            IconButton(
+                onClick = onDeleteClick,
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete note"
+                )
+            }
         }
     }
 }

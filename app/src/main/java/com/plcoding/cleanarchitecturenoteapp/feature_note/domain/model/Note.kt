@@ -27,7 +27,6 @@ data class Note(
     // 常伴的五个圈，六个圈的取值
     companion object {
         var noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)
-        // val cusColor: Int? = -1 // 这样是不可以的
     }
 }
 

@@ -25,7 +25,7 @@ import com.plcoding.cleanarchitecturenoteapp.R
 @Composable // 排序toggle显示的排序选项界面, 是一个Stateless composable
 fun PickAColorSection (
     modifier: Modifier = Modifier,
-    noteColor: Color = Color.White,
+    noteColor: Color,
     onColorChange: (Color) -> Unit
 ) {
   val TAG = "test PickAColorSection"
@@ -43,13 +43,16 @@ fun PickAColorSection (
         // 值：可变值，当前选定的颜色,这里的设置把之前的值覆盖掉了,应该是自己的手机上设置了夜间模式，所以主页面背景变黑了，再搜一搜，弄确信一下
         val currentColor = remember {
             mutableStateOf(Color.White)
+            // mutableStateOf(noteColor)
         }
 
         // // 当前选定颜色的界面，圆形
         // ColorPreviewInfo(currentColor = currentColor.value)
-        
+
+        // easy bug fix: remember last customized color and positions
         ClassicColorPicker(
-            color = currentColor.value,
+            // color = currentColor.value,
+            color = noteColor,
             modifier = Modifier
                 .height(300.dp)
                 .padding(16.dp),
@@ -59,7 +62,6 @@ fun PickAColorSection (
                 Log.d(TAG, "onColorChanged()")
                 currentColor.value = hsvColor.toColor()
                 onColorChange(currentColor.value)
-                
             }
         )
     }

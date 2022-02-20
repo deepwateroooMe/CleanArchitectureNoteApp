@@ -21,35 +21,20 @@ import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.Gall
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.MyNotesPermissions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-// val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
-
-// 这里还想要加入网络图片的地址框：url,所以就是三种可能性的判断，这里的逻辑比较混乱，已经打乱了原项目的架构，感觉
-// 现在保存图片，有点儿不知道从哪里开始
+// 这里还想要加入网络图片的地址框：url,所以就是三种可能性的判断，这里的逻辑比较混乱，已经打乱了原项目的架构
 @ExperimentalCoilApi
 @ExperimentalCoroutinesApi
 @ExperimentalPermissionsApi
 @Composable
 fun ImageMainContent(
     modifier: Modifier = Modifier,
-     // imageUri: MutableState<Uri>,
-     // showGallerySelect: MutableState<Boolean>,
-    // imageUri: MutableState<Uri> = mutableStateOf(EMPTY_IMAGE_URI),
-    // showGallerySelect: MutableState<Boolean>
      viewModel: AddEditNoteViewModel
 ) {
-    // private var _imgUri = mutableStateOf(EMPTY_IMAGE_URI)
-    // val imgUri: MutableState<Uri> = _imgUri
-
-    // private val _showGallery = mutableStateOf<Boolean>(false)
-    // val showGallery: MutableState<Boolean> = _showGallery
-
     val TAG = "test ImageMainContent"
-    Log.d(TAG, "(imageUri != EMPTY_IMAGE_URI): " + (viewModel.imgUri.value != EMPTY_IMAGE_URI))
-    Log.d(TAG, "showGallery.value: " + viewModel.showGallery.value)
-    Log.d(TAG, "imageUri.toString(): " + viewModel.imgUri.toString())
 
     //     var imageUri by remember { mutableStateOf(EMPTY_IMAGE_URI) }
     if (viewModel.imgUri.value != EMPTY_IMAGE_URI) {
+        // 已经有了用户自=定义的图片了，显示图片，并显示删除重加选择
         Box(modifier = modifier) {
             Image(
                 modifier = Modifier.fillMaxSize(),
@@ -73,10 +58,7 @@ fun ImageMainContent(
             GallerySelect(
                 modifier = modifier,
                 onImageUri = { uri -> 
-                                   Log.d(TAG, "onImageUri img selected")
-                               Log.d(TAG, "uri.toString(): " + uri.toString())
                     viewModel.showGallery.value = false
-                    // viewModel.onEvent(AddEditNoteEvent.ToggleGallerySection)
                     viewModel.imgUri.value = uri
                     viewModel.onEvent(AddEditNoteEvent.LoadImageUri(uri))
                 }
@@ -86,8 +68,9 @@ fun ImageMainContent(
                 CameraCapture(
                     modifier = modifier,
                     onImageFile = { file ->
+                                        Log.d(TAG, "onImageFile")
                                         viewModel.imgUri.value = file.toUri()
-                                    Log.d(TAG, "imgaeUri.value.toString(): " + viewModel.imgUri.value.toString())
+                                    Log.d(TAG, "file.toUri.toString(): " + file.toUri().toString())
                                     viewModel.onEvent(AddEditNoteEvent.LoadImageUri(file.toUri()))
                     }
                 )
@@ -97,8 +80,6 @@ fun ImageMainContent(
                         .padding(4.dp),
                     onClick = {
                         viewModel.showGallery.value = true
-                        // viewModel.onEvent(AddEditNoteEvent.ToggleGallerySection)
-                        // viewModel.onEvent(AddEditNoteEvent.RemoveImage())
                     }
                 ) {
                     Text("Select from Gallery")

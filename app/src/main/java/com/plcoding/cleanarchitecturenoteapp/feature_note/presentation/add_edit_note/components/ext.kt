@@ -14,7 +14,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-// 最开始compile不了，居然把这么重要的文件都给整合丢了，当然compile不了呀，不怪compose version,是这个文件的问题
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine {
     continuation ->
         ProcessCameraProvider.getInstance(this).also {
@@ -31,11 +30,14 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
 val Context.executor: Executor
     get() = ContextCompat.getMainExecutor(this)
 
+// 这里的这个方法它说找不到。。。。。。
 suspend fun ImageCapture.takePicture(executor: Executor): File {
     val photoFile = withContext(Dispatchers.IO) {
         kotlin.runCatching {
+            Log.d("test takePicture", "runCatching create image.jpg file")
             File.createTempFile("image", "jpg")
         }.getOrElse { ex ->
+                          Log.d("test takePicture ex: ", ex.toString())
                           Log.e("TakePicture", "Failed to create temporary file", ex)
                       File("/dev/null")
         }
