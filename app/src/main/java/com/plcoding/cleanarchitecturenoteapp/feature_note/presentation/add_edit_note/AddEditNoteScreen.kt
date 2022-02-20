@@ -39,7 +39,6 @@ import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.load
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-// 这里面关于相机的部分的状态没有理清楚，所以导致了图片选择库这个地方有个blocking bug，have to fix before moving on
 @OptIn(ExperimentalAnimationApi::class,
     com.google.accompanist.permissions.ExperimentalPermissionsApi::class
 )
@@ -64,7 +63,6 @@ fun AddEditNoteScreen (
 
     val noteBackgroundAnimatable = remember {
         Animatable(
-            // Color(if (noteColorState.color != -1) noteColorState.color else viewModel.noteColor.value.color)
             Color(if (noteColorState.color != -1) noteColorState.color else colorState.color)
         )
     }
@@ -151,27 +149,27 @@ fun AddEditNoteScreen (
                         modifier = Modifier.size(150.dp),
                         tint = (if (colorCusState == -1) Color.Red else Color(colorCusState))
                     )
-//                     Box (modifier = Modifier
-//                             .size(50.dp)
-//                             .shadow(15.dp, CircleShape)
-//                             .background(
-//                                 // 这里把它设定为了colorState值更新前的value，即上一次选定的颜色，所以会受其它按钮的影响，可以用一个值把它记住，就不会悥记了
-//                                 // Color(if (Note.cusColor != -1) Note.cusColor else viewModel.noteColor.value.color), // 这里仍然不对
-// //                                Color(colorCusState),
-//                                 Color.Transparent,
-//                                 shape = CircleShape // 想把这里改成心形
-//                             )
-//                         // 如果我定义了圆圈的黑圈描边，那么需要根据背景的颜色来判断：当前背景是否是自定义的背景，是则描黑边，否则就透明不描
-//                             .border(
-//                                 width = 3.dp,
-//                                 color = if (Color(colorCusState) != noteBackgroundAnimatable.value) {
-//                                     Color.Transparent
-//                                 } else {
-//                                     Color.Black
-//                                 },
-//                                 shape = CircleShape
-//                             )
-//                     )
+                    // 想要这个box在用户自定义颜色的时候周边黑圆圈高亮，所以设置透明背景（而不是填用户自定义的颜色，填了宝贝爱心形状就被掩盖掉了。。。）
+                    Box (modifier = Modifier
+                            .size(50.dp)
+                            .shadow(15.dp, CircleShape)
+                            .background(
+                                // 这里把它设定为了colorState值更新前的value，即上一次选定的颜色，所以会受其它按钮的影响，可以用一个值把它记住，就不会悥记了
+                                // Color(colorCusState),
+                                Color.Transparent,
+                                shape = CircleShape // 想把这里改成心形
+                            )
+                        // 如果我定义了圆圈的黑圈描边，那么需要根据背景的颜色来判断：当前背景是否是自定义的背景，是则描黑边，否则就透明不描
+                            .border(
+                                width = 3.dp,
+                                color = if (Color(colorCusState) != noteBackgroundAnimatable.value) {
+                                    Color.Transparent
+                                } else {
+                                    Color.Black
+                                },
+                                shape = CircleShape
+                            )
+                    )
                 }
                 IconButton(
                     onClick = {

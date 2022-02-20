@@ -39,6 +39,7 @@ class AddEditNoteViewModel @Inject constructor(
 
     private val _noteColor = mutableStateOf<NoteColorState>(NoteColorState(Note.noteColors.random().toArgb(), false, -1))
     val noteColor: State<NoteColorState> = _noteColor
+    // 这里是想要合并的，暂且这样吧
     private val _noteCusColor = mutableStateOf<Int>(-1)
     val noteCusColor: State<Int> = _noteCusColor
 
@@ -128,9 +129,6 @@ class AddEditNoteViewModel @Inject constructor(
             }
             is AddEditNoteEvent.ChangeColor -> {
                  _noteColor.value.color = event.color.toArgb()
-//                _noteColor.value = noteColor.value.copy(
-//                    color = noteColor.value.color
-//                )
             }
             is AddEditNoteEvent.ChangeCusColor -> { // 
                  _noteCusColor.value = event.color.toArgb()
