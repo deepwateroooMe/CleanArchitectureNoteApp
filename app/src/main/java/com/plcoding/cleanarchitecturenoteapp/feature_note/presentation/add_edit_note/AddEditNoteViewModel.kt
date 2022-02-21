@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
 // val url = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
-val url = ""
+val url = "http://pinyin.cn/e461273"
 
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
@@ -44,8 +44,8 @@ class AddEditNoteViewModel @Inject constructor(
     private val _noteCusColor = mutableStateOf<Int>(-1)
     val noteCusColor: State<Int> = _noteCusColor
 
-    private val _gifId = mutableStateOf<Int>("e461273")
-    val gifId: State<Int> = _gifId
+    // private val _gifId = mutableStateOf<String>("e461273")
+    // val gifId: State<String> = _gifId
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()

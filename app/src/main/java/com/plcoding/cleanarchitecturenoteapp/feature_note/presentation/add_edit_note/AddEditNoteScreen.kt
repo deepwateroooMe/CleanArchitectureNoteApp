@@ -1,42 +1,29 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
 import com.plcoding.cleanarchitecturenoteapp.R
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.*
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.DEFAULT_RECIPE_IMAGE
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.GallerySelect
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.GifImage
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.loadPicture
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -193,31 +180,24 @@ fun AddEditNoteScreen (
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                GifImage(
+                PickAColorSection( // 暂且暂换一下
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-                    R.drawable.love
+                    noteColor = (if (colorCusState == -1) Color.Red else Color(colorCusState)),
+                    onColorChange = {
+                        viewModel.onEvent(AddEditNoteEvent.ChangeColor(it))
+                        scope.launch {
+                            noteBackgroundAnimatable.animateTo(
+                                targetValue = it,
+                                animationSpec = tween(
+                                    durationMillis = 500
+                                )
+                            )
+                            viewModel.onEvent(AddEditNoteEvent.ChangeCusColor(it))
+                        }
+                    }
                 )
-
-                // PickAColorSection( // 暂且暂换一下
-                //     modifier = Modifier
-                //         .fillMaxWidth()
-                //         .padding(vertical = 16.dp),
-                //     noteColor = (if (colorCusState == -1) Color.Red else Color(colorCusState)),
-                //     onColorChange = {
-                //         viewModel.onEvent(AddEditNoteEvent.ChangeColor(it))
-                //         scope.launch {
-                //             noteBackgroundAnimatable.animateTo(
-                //                 targetValue = it,
-                //                 animationSpec = tween(
-                //                     durationMillis = 500
-                //                 )
-                //             )
-                //             viewModel.onEvent(AddEditNoteEvent.ChangeCusColor(it))
-                //         }
-                //     }
-                // )
             }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
@@ -257,14 +237,22 @@ fun AddEditNoteScreen (
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                ImageMainContent(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(top = 8.dp) // adding some space to the label
-                        .background(Color(colorState.color)),
-                    viewModel
-                )
+                SpannableImageText(R.drawable.love, R.drawable.study, R.drawable.faster)
+                // GifImage(
+                //     modifier = Modifier
+                //         .fillMaxWidth()
+                //         .padding(vertical = 16.dp),
+                //     R.drawable.love
+                // )
+
+                // ImageMainContent(
+                //     modifier = Modifier
+                //         .fillMaxWidth()
+                //         // .fillMaxHeight()
+                //         .padding(top = 8.dp) // adding some space to the label
+                //         .background(Color(colorState.color)),
+                //     viewModel
+                // )
             }
         }
     }
