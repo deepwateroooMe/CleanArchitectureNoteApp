@@ -35,6 +35,7 @@ import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.*
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.DEFAULT_RECIPE_IMAGE
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.GallerySelect
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.GifImage
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.loadPicture
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -60,14 +61,13 @@ fun AddEditNoteScreen (
     var showGallery = viewModel.showGallery
 
     val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
 
     val noteBackgroundAnimatable = remember {
         Animatable(
             Color(if (noteColorState.color != -1) noteColorState.color else colorState.color)
         )
     }
-
-    val scope = rememberCoroutineScope()
 
     // LaunchEffect允许我们在Composable中使用协程
     // 让Composable支持协程的重要意义是，可以让一些简单的业务逻辑直接以Composable的形式封装并实现复用，而无需额外借助ViewModel
@@ -139,7 +139,8 @@ fun AddEditNoteScreen (
                     )
                 }
                 IconButton(
-                    onClick = { // BUG #2: 自定义颜色：这里不知道是哪里的原因，残留了一个背景圆圈的背景，需要fix掉
+                    onClick = {
+                        // 暂且把这个替换一下
                         viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
                     },
                 ) {
@@ -192,26 +193,31 @@ fun AddEditNoteScreen (
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                PickAColorSection(
+                GifImage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-
-                    noteColor = (if (colorCusState == -1) Color.Red else Color(colorCusState)),
-
-                    onColorChange = {
-                        viewModel.onEvent(AddEditNoteEvent.ChangeColor(it))
-                        scope.launch {
-                            noteBackgroundAnimatable.animateTo(
-                                targetValue = it,
-                                animationSpec = tween(
-                                    durationMillis = 500
-                                )
-                            )
-                            viewModel.onEvent(AddEditNoteEvent.ChangeCusColor(it))
-                        }
-                    }
+                    R.drawable.love
                 )
+
+                // PickAColorSection( // 暂且暂换一下
+                //     modifier = Modifier
+                //         .fillMaxWidth()
+                //         .padding(vertical = 16.dp),
+                //     noteColor = (if (colorCusState == -1) Color.Red else Color(colorCusState)),
+                //     onColorChange = {
+                //         viewModel.onEvent(AddEditNoteEvent.ChangeColor(it))
+                //         scope.launch {
+                //             noteBackgroundAnimatable.animateTo(
+                //                 targetValue = it,
+                //                 animationSpec = tween(
+                //                     durationMillis = 500
+                //                 )
+                //             )
+                //             viewModel.onEvent(AddEditNoteEvent.ChangeCusColor(it))
+                //         }
+                //     }
+                // )
             }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(

@@ -1,6 +1,7 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
@@ -42,6 +43,9 @@ class AddEditNoteViewModel @Inject constructor(
     // 这里是想要合并的，暂且这样吧
     private val _noteCusColor = mutableStateOf<Int>(-1)
     val noteCusColor: State<Int> = _noteCusColor
+
+    private val _gifId = mutableStateOf<Int>("e461273")
+    val gifId: State<Int> = _gifId
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -168,9 +172,11 @@ class AddEditNoteViewModel @Inject constructor(
             }     
             is AddEditNoteEvent.EnteredContent -> {
                 _noteContent.value = _noteContent.value.copy(
-                    text = event.value
+                    text = event.value,
                 )
-            }     
+                Log.d(TAG, "text: " + _noteContent.value.text)
+            }
+
             is AddEditNoteEvent.ChangeContentFocus -> {
                 _noteContent.value = _noteContent.value.copy(
                     isHintVisible = !event.focusState.isFocused
