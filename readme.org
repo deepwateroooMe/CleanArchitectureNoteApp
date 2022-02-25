@@ -5,6 +5,14 @@
 
 * Android Compose
 ** current update
+- G Rich Editor Text easy integeration
+   
+   [[./pic/screen6.png]]
+- will finish linking the rest
+
+** TOTO: 
+
+** prev updates
 - 找不到开放的表情包api，可能就会放弃网上动态抓取表情包了，下载自己到
   本地，自己练习一下
 
@@ -17,10 +25,6 @@
   这里不是.gif网址链接，是无法用代码实现下载的，另换思路。
 
 [[./pic/screens1.png]]
-
-** TOTO: 
-
-** prev updates
 - 目前每条note可以选择添加一张图片，并在首页每条note各自的显示中若有图
   片，将固定大小的小图片是首页中显示出来
 - fix掉了所有目前知晓的bug

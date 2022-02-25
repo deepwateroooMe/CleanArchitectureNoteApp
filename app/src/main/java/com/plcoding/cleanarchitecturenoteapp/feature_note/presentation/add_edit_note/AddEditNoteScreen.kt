@@ -1,6 +1,12 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note
 
+import android.graphics.drawable.Icon
+import android.text.Spanned
+import androidx.compose.material.icons.Icons
 import android.util.Log
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.LinearLayout
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -8,27 +14,43 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.constraintlayout.solver.widgets.Rectangle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.plcoding.cleanarchitecturenoteapp.R
+import com.plcoding.cleanarchitecturenoteapp.R.drawable
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.*
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.RichEditText.GRicheditorViewComposable
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.html.HtmlText
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.html.annotatedStringResource
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.html.parseBold
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.html.parseHtml
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class,
-    com.google.accompanist.permissions.ExperimentalPermissionsApi::class
+    com.google.accompanist.permissions.ExperimentalPermissionsApi::class,
+    androidx.compose.material.ExperimentalMaterialApi::class
 )
 @Composable // 每条便签一编写界面
 fun AddEditNoteScreen (
@@ -46,6 +68,7 @@ fun AddEditNoteScreen (
 
     val imageUri = viewModel.imgUri
     var showGallery = viewModel.showGallery
+    var notePreview = viewModel.notePreview.value
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -81,7 +104,10 @@ fun AddEditNoteScreen (
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
+                Icon(
+                    imageVector = Icons.Default.Save,
+                    contentDescription = "Save note"
+                )
             }
         },
         scaffoldState = scaffoldState
@@ -106,7 +132,8 @@ fun AddEditNoteScreen (
                             .shadow(15.dp, CircleShape)
                             .clip(CircleShape)
                             .background(color)
-                            .border(width = 3.dp,
+                            .border(
+                                width = 3.dp,
                                 color = if (colorState.color == colorInt) {
                                     Color.Black
                                 } else Color.Transparent,
@@ -127,27 +154,23 @@ fun AddEditNoteScreen (
                 }
                 IconButton(
                     onClick = {
-                        // 暂且把这个替换一下
                         viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
                     },
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Favorite,
+                        imageVector = Filled.Favorite,
                         contentDescription = "Favorite",
                         modifier = Modifier.size(150.dp),
                         tint = (if (colorCusState == -1) Color.Red else Color(colorCusState))
                     )
-                    // 想要这个box在用户自定义颜色的时候周边黑圆圈高亮，所以设置透明背景（而不是填用户自定义的颜色，填了宝贝爱心形状就被掩盖掉了。。。）
-                    Box (modifier = Modifier
+                    Box(
+                        modifier = Modifier
                             .size(50.dp)
                             .shadow(15.dp, CircleShape)
                             .background(
-                                // 这里把它设定为了colorState值更新前的value，即上一次选定的颜色，所以会受其它按钮的影响，可以用一个值把它记住，就不会悥记了
-                                // Color(colorCusState),
                                 Color.Transparent,
-                                shape = CircleShape // 想把这里改成心形
+                                shape = CircleShape 
                             )
-                        // 如果我定义了圆圈的黑圈描边，那么需要根据背景的颜色来判断：当前背景是否是自定义的背景，是则描黑边，否则就透明不描
                             .border(
                                 width = 3.dp,
                                 color = if (Color(colorCusState) != noteBackgroundAnimatable.value) {
@@ -161,8 +184,10 @@ fun AddEditNoteScreen (
                 }
                 IconButton(
                     onClick = {
-                        Log.d(TAG, "onClick toggleImageSection")
-                        viewModel.onEvent(AddEditNoteEvent.ToggleImageSection)
+                        Log.d(TAG, "onClick toggleNotePreview()")
+                        // viewModel.onEvent(AddEditNoteEvent.ToggleImageSection)
+                        // 这时暂换一下：toggle Preview Mode
+                        viewModel.onEvent(AddEditNoteEvent.ToggleNotePreview)
                     },
                 ) {
                     Icon(
@@ -180,7 +205,7 @@ fun AddEditNoteScreen (
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                PickAColorSection( // 暂且暂换一下
+                PickAColorSection( 
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
@@ -199,6 +224,57 @@ fun AddEditNoteScreen (
                     }
                 )
             }
+            // 设置编辑状态下的可选用便捷按钮,preview状态下隐藏
+            AnimatedVisibility(
+                visible = !notePreview,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(2.dp), // 8.dp
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Note.noteCommands.forEach {
+                        color ->
+                        Box(
+                            modifier = Modifier
+                                .weight(0.3f)
+                                .height(32.dp)
+                                .shadow(15.dp, RectangleShape)
+                                .clip(RoundedCornerShape(10.dp)) // RectangleShape
+                                .background(Color.White)
+                                //                                .border(
+                                //                                    width = 3.dp,
+                                //                                    // 这里设置点击了选中状态下的边框描绘
+                                //                                    // color = if (colorState.color == colorInt) {
+                                //                                    //     Color.Black
+                                //                                    // } else Color.Transparent,
+                                //                                    shape = RectangleShape
+                                //                                )
+                                // 分四个按钮的情况回应点击事件
+                                .clickable {
+                                    // scope.launch {
+                                    //     viewModel.onEvent(AddEditNoteEvent.ChangeColor(color))
+                                    //     noteBackgroundAnimatable.animateTo(
+                                    //         targetValue = Color(colorInt),
+                                    //         animationSpec = tween(
+                                    //             durationMillis = 500
+                                    //         )
+                                    //     )
+                                    // }
+                                }
+                        )  {
+                            Text(text = color,
+                                 color = MaterialTheme.colors.primary,
+                                 fontSize = 27.sp,
+                                 modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = titleState.text,
@@ -215,44 +291,116 @@ fun AddEditNoteScreen (
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
-            TransparentHintTextField(
-                text = contentState.text,
-                hint = contentState.hint,
-                onValueChange = {
-                    viewModel.onEvent((AddEditNoteEvent.EnteredContent(it)))
-                },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                },
-                isHintVisible = contentState.isHintVisible,
-                textStyle = MaterialTheme.typography.body1,
-                // modifier = Modifier.fillMaxHeight() // 因为这里已经占据了整个屏幕，你是看不见后面再加的图片的
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // 加载图片栏： 是 可见 可不见的，根据用户的点击状态来决定是否可
-            AnimatedVisibility(
-                visible = imageState.isImageSectionVisible,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically()
-            ) {
-                SpannableImageText(R.drawable.love, R.drawable.study, R.drawable.faster)
-                // GifImage(
-                //     modifier = Modifier
-                //         .fillMaxWidth()
-                //         .padding(vertical = 16.dp),
-                //     R.drawable.love
-                // )
 
-                // ImageMainContent(
-                //     modifier = Modifier
-                //         .fillMaxWidth()
-                //         // .fillMaxHeight()
-                //         .padding(top = 8.dp) // adding some space to the label
-                //         .background(Color(colorState.color)),
-                //     viewModel
+            val mView = GRicheditorView(LocalContext.current, )
+            if (!notePreview) {
+                GRicheditorViewComposable()
+                
+                // widget.TextView
+//                 AndroidView(factory = { ctx ->
+//                                             //Here you can construct your View
+//                                         GRicheditorView(ctx).apply {
+//                                             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+//                                         }
+//                             }, update = {
+    // //                                it.text = contentState.hint
+//                 })
+                // // 现在，我不想要这个东西了，想要改回传统自定义视图的多功能实现版块
+                // TransparentHintTextField(
+                //     text = contentState.text,
+                //     hint = contentState.hint,
+                //     onValueChange = {
+                //         viewModel.onEvent((AddEditNoteEvent.EnteredContent(it)))
+                //     },
+                //     onFocusChange = {
+                //         viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+                //     },
+                //     isHintVisible = contentState.isHintVisible,
+                //     textStyle = MaterialTheme.typography.body1,
+                //     // modifier = Modifier.fillMaxHeight() // 因为这里已经占据了整个屏幕，你是看不见后面再加的图片的
+                //     modifier = Modifier.fillMaxWidth()
                 // )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // 加载图片栏： 是 可见 可不见的，根据用户的点击状态来决定是否可
+                AnimatedVisibility(
+                    visible = imageState.isImageSectionVisible,
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically()
+                ) {
+                    SpannableImageText(R.drawable.love, R.drawable.study, R.drawable.faster)
+//                    GifImage(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(vertical = 16.dp),
+//                            R.drawable.love
+//                    )
+
+                    // ImageMainContent(
+                    //     modifier = Modifier
+                    //         .fillMaxWidth()
+                    //         // .fillMaxHeight()
+                    //         .padding(top = 8.dp) // adding some space to the label
+                    //         .background(Color(colorState.color)),
+                    //     viewModel
+                    // )
+                }
+            } else {
+                // 这些是markdown的，可以用来参考的
+                // val parser = org.commonmark.parser.Parser.builder().build()
+                // val root = parser.parse(contentState.text) as Document
+                // 显示render后的note的内容
+//                 Surface(
+//                     color = Color(noteColorState.color),
+// //                    modifier = Modifier.doubleTapGestureFilter {
+// //                        setRender(!render)
+// //                }
+//                 ) {
+    // 这里的数据源可以是html文本：就需要将Span转化为AnnotatedString
+                Text(text = "Hello, I am <b> bold</b> text".parseBold())
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text("parseHtml: ")
+                "Hello, I am <b> bold</b> text <br> Hello, I am <i> italic</i> text <br> Hello, I am <u> underline</u> text".parseHtml()
+
+//    Spanned.toAnnotatedString(R.string.tmp)
+
+                // Log.d(TAG, "annotatedStringResource: ")
+                Text("annotatedStringResource:  ")
+                val tmp = annotatedStringResource(R.string.tmp, "UTF-8")
+                Log.d(TAG, "tmp: " + tmp)
+                Log.d(TAG, "tmp.toAnnotatedString()")
+//                Text(text = tmp.toAnnotatedString())
+                Text(tmp)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text("HtmlText: ")
+                HtmlText("Hello, I am <b> bold</b> text <br> Hello, I am <i> italic</i> text <br> Hello, I am <u> underline</u> text")
+
+// val t2 = "This is a string containing an <annotation format='bold'>annotation</annotation> which we can use to <annotation format='italic'>style</annotation> the substrings"
+
+                IconButton(
+                    onClick = {
+                        Log.d(TAG, "onClick togglePreview")
+                        viewModel.onEvent(AddEditNoteEvent.ToggleNotePreview)
+                    },
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(0.6f)
+                            .height(32.dp)
+                            .shadow(15.dp, RectangleShape)
+                            .clip(RoundedCornerShape(10.dp)) // RectangleShape
+                            .background(Color.Black)
+                    )
+                    // Icon(
+                    //     painter = painterResource(id = R.drawable.preview),
+                    //     contentDescription = "Images",
+                    //     modifier = Modifier.weight(0.5f).height(32.dp)
+                    // )
+                    Text("<--Edit")
+                }
             }
         }
     }

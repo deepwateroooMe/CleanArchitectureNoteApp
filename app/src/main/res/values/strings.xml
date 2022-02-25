@@ -2,4 +2,5 @@
     <string name="app_name">CleanArchitectureNoteApp</string>
     <string name="content_description_back_button">BACK</string>
     <string name="classic_color_picker_sample">Classic Color Picker</string>
+    <string name="tmp">Hello, I am <b> bold</b> text \n Hello, I am <i> italic</i> text \n Hello, I am <u> underline</u> text</string>
 </resources>

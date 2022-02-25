@@ -27,6 +27,8 @@ data class Note(
     // 常伴的五个圈，六个圈的取值
     companion object {
         var noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)
+        // var noteCommands = listOf("Bold", "Italic", "UnderScore", "Stroke")
+        var noteCommands = listOf("B", "I", "U", "S")
     }
 }
 

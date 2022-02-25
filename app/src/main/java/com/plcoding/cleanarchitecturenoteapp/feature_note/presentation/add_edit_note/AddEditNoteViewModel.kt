@@ -3,7 +3,10 @@ package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,15 +14,17 @@ import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.InvalidNo
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.use_case.NoteUseCases
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.*
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.html.HtmlText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
-// val url = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
-val url = "http://pinyin.cn/e461273"
+ val url = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
 
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
@@ -61,6 +66,9 @@ class AddEditNoteViewModel @Inject constructor(
     private val _showGallery = mutableStateOf<Boolean>(false)
     val showGallery: MutableState<Boolean> = _showGallery
 
+    private val _notePreview = mutableStateOf<Boolean>(false)
+    val notePreview: MutableState<Boolean> = _notePreview
+
     init {
         savedStateHandle.get<Int>("noteId")?.let {
             noteId ->
@@ -73,6 +81,7 @@ class AddEditNoteViewModel @Inject constructor(
                                 text = note.title,
                                 isHintVisible = false
                             )
+                            // 这里要怎么处理呢？两个annotatedstring的合并
                             _noteContent.value = noteContent.value.copy(
                                 text = note.content,
                                 isHintVisible = false
@@ -125,6 +134,11 @@ class AddEditNoteViewModel @Inject constructor(
                 }
             }
 
+            // toggle preview
+            is AddEditNoteEvent.ToggleNotePreview -> {
+                _notePreview.value = !notePreview.value
+            }
+
             // 选择一个favoriate颜色: 这里要理解一下event的事件传递方向
             is AddEditNoteEvent.ToggleColorSection -> {
                 _noteColor.value = noteColor.value.copy(
@@ -169,14 +183,12 @@ class AddEditNoteViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused
                     && _noteTitle.value.text.isBlank()
                 )
-            }     
+            }
             is AddEditNoteEvent.EnteredContent -> {
                 _noteContent.value = _noteContent.value.copy(
                     text = event.value,
                 )
-                Log.d(TAG, "text: " + _noteContent.value.text)
             }
-
             is AddEditNoteEvent.ChangeContentFocus -> {
                 _noteContent.value = _noteContent.value.copy(
                     isHintVisible = !event.focusState.isFocused
@@ -185,6 +197,24 @@ class AddEditNoteViewModel @Inject constructor(
             }     
         }
     }
+
+//    suspend fun processAnnotations(text: CharSequence?) {
+//        return if (text is SpannedString) {
+//            withContext(Dispatchers.IO) {
+//                val spannableStringBuilder = SpannableStringBuilder(text)
+//                text.getSpans(0, text.length, Annotation::class.java)
+//                    .filter { it.key == "format" && it.value == "bold" }
+//                    .forEach { annotation ->
+//                                   spannableStringBuilder[text.getSpanStart(annotation)..text.getSpanEnd(annotation)] =
+//                                   StyleSpan(Typeface.BOLD)
+//                    }
+//                spannableStringBuilder.toSpannable()
+//            }
+//        } else {
+//            text
+//        }
+//    }
+    
     sealed class UiEvent {
         data class ShowSnackbar(val message: String): UiEvent()
         object SaveNote: UiEvent()
