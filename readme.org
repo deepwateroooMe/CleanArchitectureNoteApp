@@ -7,11 +7,19 @@
 ** current update
 - G Rich Editor Text easy integeration
    
-   [[./pic/screen6.png]]
-- will finish linking the rest
+   [[./pic/screen6.jpg]]
 
+- will finish linking and clean up the rest.
+- 想要试图通过annotatedString的拼接与composable的事件传递与拦截来实现
+  全compose版本的富文本编辑，但一方面compose的基础不够，另则比较新和前
+  沿一点的知识点网络上的资源有限，遇到困难不方面查询和解决问题，这里也
+  可能思路不能，暂时放弃
+- 关于EditText span html富文本手动实现的部分，原理都懂，如果想要，改天会再开一个
+  repository专门练习富文件的某些功能的实现，目前暂时就在compose中插入
+  一个xml layout AndroidView版本的第三方库
 ** TOTO: 
-
+- 这个项目的目标暂时定在这里，clean up之后暂放一下（gif的部分，因为整
+  合了第三方库都暂不作考虑了），改天有新的想法再整合实现和修改
 ** prev updates
 - 找不到开放的表情包api，可能就会放弃网上动态抓取表情包了，下载自己到
   本地，自己练习一下
