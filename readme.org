@@ -7,7 +7,7 @@
 ** current update
 - G Rich Editor Text easy integeration
    
-   [[./pic/screen6.jpg]]
+   [[./pic/screen7.jpg]]
 
 - will finish linking and clean up the rest.
 - 想要试图通过annotatedString的拼接与composable的事件传递与拦截来实现

@@ -277,6 +277,7 @@ fun AddEditNoteScreen (
             GRicheditorViewComposable(
                 modifier = Modifier
                     .fillMaxWidth(),
+                colorState.color,
                 viewModel
             )
                 // // 现在，我不想要这个东西了，想要改回传统自定义视图的多功能实现版块

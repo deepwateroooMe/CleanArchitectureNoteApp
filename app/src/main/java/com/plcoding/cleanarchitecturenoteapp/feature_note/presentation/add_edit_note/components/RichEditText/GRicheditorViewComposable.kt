@@ -18,12 +18,18 @@ val imgURL: String = "https://avatar.csdnimg.cn/1/9/7/1_qq_43143981_1552988521.j
 @Composable
 fun GRicheditorViewComposable (
     modifier: Modifier,
+    color: Int,
     viewModel: AddEditNoteViewModel
 ) {
     var isChangedTextColor = remember { mutableStateOf(false) }
     var isChangedBgColor = remember { mutableStateOf(false) }
 
+    // 这里需要对于开放一下mEditor.setText()方法，方便便签加载的时候调用
     AndroidViewBinding(RichEditorLayoutBinding::inflate) {
+        // Set Editor background color to match system design Note background color
+        mEditor.setEditorBackgroundColor(color)
+        mEditor.setHtml(viewModel.noteContent.value.text)
+        
         // 这些按钮的显示与否，可以再调控一下, hasFocus() == visible
         actionUndo.setOnClickListener() {
             mEditor.undo()
@@ -113,6 +119,12 @@ fun GRicheditorViewComposable (
             mEditor.setBlockquote() 
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
+        // // 这里也需要跟之前完成的内容连接起来
+        // actionInsertImage.setOnClickListener() {
+        //     mEditor.insertImage(viewModel.)
+        //     viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
+        // }
+
         actionInsertAudio.setOnClickListener() {
             mEditor.insertAudio("https://file-examples-com.github.io/uploads/2017/11/fileexampleMP35MG.mp3")
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))

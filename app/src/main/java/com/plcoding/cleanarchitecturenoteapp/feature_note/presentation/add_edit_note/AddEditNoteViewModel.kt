@@ -81,9 +81,10 @@ class AddEditNoteViewModel @Inject constructor(
                                 text = note.title,
                                 isHintVisible = false
                             )
-                            // 这里要怎么处理呢？两个annotatedstring的合并
+                            // 这里需要一步处理：将html文本转化为RichEditor的spanned string
                             _noteContent.value = noteContent.value.copy(
-                                text = note.content,
+                                 text = note.content,
+//                                text =
                                 isHintVisible = false
                             )
                             _noteColor.value = noteColor.value.copy(
