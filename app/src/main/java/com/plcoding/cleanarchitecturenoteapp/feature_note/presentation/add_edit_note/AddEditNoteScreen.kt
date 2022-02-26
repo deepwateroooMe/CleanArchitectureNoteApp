@@ -184,10 +184,10 @@ fun AddEditNoteScreen (
                 }
                 IconButton(
                     onClick = {
-                        Log.d(TAG, "onClick toggleNotePreview()")
-                        // viewModel.onEvent(AddEditNoteEvent.ToggleImageSection)
-                        // 这时暂换一下：toggle Preview Mode
-                        viewModel.onEvent(AddEditNoteEvent.ToggleNotePreview)
+                        viewModel.onEvent(AddEditNoteEvent.ToggleImageSection)
+                        // 这时暂换一下：toggle Preview Mode 不需要设置这样的Mode
+                        // Log.d(TAG, "onClick toggleNotePreview()")
+                        // viewModel.onEvent(AddEditNoteEvent.ToggleNotePreview)
                     },
                 ) {
                     Icon(
@@ -224,57 +224,39 @@ fun AddEditNoteScreen (
                     }
                 )
             }
-            // 设置编辑状态下的可选用便捷按钮,preview状态下隐藏
-            AnimatedVisibility(
-                visible = !notePreview,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically()
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(2.dp), // 8.dp
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Note.noteCommands.forEach {
-                        color ->
-                        Box(
-                            modifier = Modifier
-                                .weight(0.3f)
-                                .height(32.dp)
-                                .shadow(15.dp, RectangleShape)
-                                .clip(RoundedCornerShape(10.dp)) // RectangleShape
-                                .background(Color.White)
-                                //                                .border(
-                                //                                    width = 3.dp,
-                                //                                    // 这里设置点击了选中状态下的边框描绘
-                                //                                    // color = if (colorState.color == colorInt) {
-                                //                                    //     Color.Black
-                                //                                    // } else Color.Transparent,
-                                //                                    shape = RectangleShape
-                                //                                )
-                                // 分四个按钮的情况回应点击事件
-                                .clickable {
-                                    // scope.launch {
-                                    //     viewModel.onEvent(AddEditNoteEvent.ChangeColor(color))
-                                    //     noteBackgroundAnimatable.animateTo(
-                                    //         targetValue = Color(colorInt),
-                                    //         animationSpec = tween(
-                                    //             durationMillis = 500
-                                    //         )
-                                    //     )
-                                    // }
-                                }
-                        )  {
-                            Text(text = color,
-                                 color = MaterialTheme.colors.primary,
-                                 fontSize = 27.sp,
-                                 modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                    }
-                }
-            }
+            // // 设置编辑状态下的可选用便捷按钮,preview状态下隐藏: 这些都不需要了
+            // AnimatedVisibility(
+            //     visible = !notePreview,
+            //     enter = fadeIn() + slideInVertically(),
+            //     exit = fadeOut() + slideOutVertically()
+            // ) {
+            //     Row(
+            //         modifier = Modifier
+            //             .fillMaxWidth()
+            //             .padding(2.dp), // 8.dp
+            //         horizontalArrangement = Arrangement.SpaceBetween
+            //     ) {
+            //         Note.noteCommands.forEach {
+            //             color ->
+            //             Box(
+            //                 modifier = Modifier
+            //                     .weight(0.3f)
+            //                     .height(32.dp)
+            //                     .shadow(15.dp, RectangleShape)
+            //                     .clip(RoundedCornerShape(10.dp)) // RectangleShape
+            //                     .background(Color.White)
+            //                     .clickable {
+            //                     }
+            //             )  {
+            //                 Text(text = color,
+            //                      color = MaterialTheme.colors.primary,
+            //                      fontSize = 27.sp,
+            //                      modifier = Modifier.align(Alignment.Center)
+            //                 )
+            //             }
+            //         }
+            //     }
+            // }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = titleState.text,
@@ -291,20 +273,12 @@ fun AddEditNoteScreen (
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
-
-            val mView = GRicheditorView(LocalContext.current, )
-            if (!notePreview) {
-                GRicheditorViewComposable()
-                
-                // widget.TextView
-//                 AndroidView(factory = { ctx ->
-//                                             //Here you can construct your View
-//                                         GRicheditorView(ctx).apply {
-//                                             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-//                                         }
-//                             }, update = {
-    // //                                it.text = contentState.hint
-//                 })
+            // if (!notePreview) {
+            GRicheditorViewComposable(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                viewModel
+            )
                 // // 现在，我不想要这个东西了，想要改回传统自定义视图的多功能实现版块
                 // TransparentHintTextField(
                 //     text = contentState.text,
@@ -320,32 +294,31 @@ fun AddEditNoteScreen (
                 //     // modifier = Modifier.fillMaxHeight() // 因为这里已经占据了整个屏幕，你是看不见后面再加的图片的
                 //     modifier = Modifier.fillMaxWidth()
                 // )
-                Spacer(modifier = Modifier.height(16.dp))
 
-                // 加载图片栏： 是 可见 可不见的，根据用户的点击状态来决定是否可
-                AnimatedVisibility(
-                    visible = imageState.isImageSectionVisible,
-                    enter = fadeIn() + slideInVertically(),
-                    exit = fadeOut() + slideOutVertically()
-                ) {
-                    SpannableImageText(R.drawable.love, R.drawable.study, R.drawable.faster)
-//                    GifImage(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(vertical = 16.dp),
-//                            R.drawable.love
-//                    )
-
-                    // ImageMainContent(
-                    //     modifier = Modifier
-                    //         .fillMaxWidth()
-                    //         // .fillMaxHeight()
-                    //         .padding(top = 8.dp) // adding some space to the label
-                    //         .background(Color(colorState.color)),
-                    //     viewModel
-                    // )
-                }
-            } else {
+            Spacer(modifier = Modifier.height(16.dp))
+            // 加载图片栏： 是 可见 可不见的，根据用户的点击状态来决定是否可
+            AnimatedVisibility(
+                visible = imageState.isImageSectionVisible,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                // SpannableImageText(R.drawable.love, R.drawable.study, R.drawable.faster)
+                // GifImage(
+                //     modifier = Modifier
+                //         .fillMaxWidth()
+                //         .padding(vertical = 16.dp),
+                //     R.drawable.love
+                // )
+                ImageMainContent(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                    // .fillMaxHeight()
+                        .padding(top = 8.dp) // adding some space to the label
+                        .background(Color(colorState.color)),
+                    viewModel
+                )
+            }
+            // } else {
                 // 这些是markdown的，可以用来参考的
                 // val parser = org.commonmark.parser.Parser.builder().build()
                 // val root = parser.parse(contentState.text) as Document
@@ -356,52 +329,42 @@ fun AddEditNoteScreen (
 // //                        setRender(!render)
 // //                }
 //                 ) {
-    // 这里的数据源可以是html文本：就需要将Span转化为AnnotatedString
-                Text(text = "Hello, I am <b> bold</b> text".parseBold())
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text("parseHtml: ")
-                "Hello, I am <b> bold</b> text <br> Hello, I am <i> italic</i> text <br> Hello, I am <u> underline</u> text".parseHtml()
-
-//    Spanned.toAnnotatedString(R.string.tmp)
-
-                // Log.d(TAG, "annotatedStringResource: ")
-                Text("annotatedStringResource:  ")
-                val tmp = annotatedStringResource(R.string.tmp, "UTF-8")
-                Log.d(TAG, "tmp: " + tmp)
-                Log.d(TAG, "tmp.toAnnotatedString()")
-//                Text(text = tmp.toAnnotatedString())
-                Text(tmp)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text("HtmlText: ")
-                HtmlText("Hello, I am <b> bold</b> text <br> Hello, I am <i> italic</i> text <br> Hello, I am <u> underline</u> text")
-
-// val t2 = "This is a string containing an <annotation format='bold'>annotation</annotation> which we can use to <annotation format='italic'>style</annotation> the substrings"
-
-                IconButton(
-                    onClick = {
-                        Log.d(TAG, "onClick togglePreview")
-                        viewModel.onEvent(AddEditNoteEvent.ToggleNotePreview)
-                    },
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .weight(0.6f)
-                            .height(32.dp)
-                            .shadow(15.dp, RectangleShape)
-                            .clip(RoundedCornerShape(10.dp)) // RectangleShape
-                            .background(Color.Black)
-                    )
-                    // Icon(
-                    //     painter = painterResource(id = R.drawable.preview),
-                    //     contentDescription = "Images",
-                    //     modifier = Modifier.weight(0.5f).height(32.dp)
-                    // )
-                    Text("<--Edit")
-                }
-            }
+    
+//     // 这里的数据源可以是html文本：就需要将Span转化为AnnotatedString
+//                 Text(text = "Hello, I am <b> bold</b> text".parseBold())
+//                 Spacer(modifier = Modifier.height(16.dp))
+//                 Text("parseHtml: ")
+//                 "Hello, I am <b> bold</b> text <br> Hello, I am <i> italic</i> text <br> Hello, I am <u> underline</u> text".parseHtml()
+// //    Spanned.toAnnotatedString(R.string.tmp)
+//                 Text("annotatedStringResource:  ")
+//                 val tmp = annotatedStringResource(R.string.tmp, "UTF-8")
+//                 Log.d(TAG, "tmp.toAnnotatedString()")
+// //                Text(text = tmp.toAnnotatedString())
+//                 Text(tmp)
+//                 Spacer(modifier = Modifier.height(16.dp))
+//                 Text("HtmlText: ")
+//                 HtmlText("Hello, I am <b> bold</b> text <br> Hello, I am <i> italic</i> text <br> Hello, I am <u> underline</u> text")
+                // IconButton(
+                //     onClick = {
+                //         Log.d(TAG, "onClick togglePreview")
+                //         viewModel.onEvent(AddEditNoteEvent.ToggleNotePreview)
+                //     },
+                // ) {
+                //     Box(
+                //         modifier = Modifier
+                //             .weight(0.6f)
+                //             .height(32.dp)
+                //             .shadow(15.dp, RectangleShape)
+                //             .clip(RoundedCornerShape(10.dp)) // RectangleShape
+                //             .background(Color.Black)
+                //     )
+                //     // Icon(
+                //     //     painter = painterResource(id = R.drawable.preview),
+                //     //     contentDescription = "Images",
+                //     //     modifier = Modifier.weight(0.5f).height(32.dp)
+                //     // )
+                //     Text("<--Edit") // 现在不需要双模式切换，也就当然不再需要这个按钮了
+                // }
         }
     }
 }

@@ -21,7 +21,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 
 @Composable
-// For now i'm using an AndroidView with a TextView inside. Not the best solution, but it's simple and that solves the problem.
+// For now i'm using an AndroidView with a TextView inside. Not the best solution, but it's simple and that solves the problem. simple tests works
 fun HtmlText(html: String, modifier: Modifier = Modifier) {
 
     AndroidView( // 我不想用这个来着。。。。。。，可能先测试一下这个思路框架吧

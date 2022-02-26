@@ -23,6 +23,7 @@ private val tags = linkedMapOf(
 /**
  * The main entry point. Call this on a String and use the result in a Text.
  */
+// this funciton does not work well yet for compose html rendering
 @Composable
 fun String.parseHtml(): AnnotatedString {
     val newlineReplace = this.replace("<br>", "\n")
