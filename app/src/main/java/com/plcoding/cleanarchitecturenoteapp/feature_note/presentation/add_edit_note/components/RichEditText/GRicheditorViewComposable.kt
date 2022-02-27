@@ -19,6 +19,20 @@ import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_
 
  val imgURL: String = "https://avatar.csdnimg.cn/1/9/7/1_qq_43143981_1552988521.jpg"
 
+ @Composable
+ fun GRicheditorViewComposable (
+     modifier: Modifier,
+     color: Int,
+     content: String
+     // onFocusChange: (FocusState) -> Unit
+ ) {
+     AndroidViewBinding(RichEditorLayoutBinding::inflate) {
+         mEditor.setEditorHeight(100)
+         mEditor.setEditorBackgroundColor(color)
+         mEditor.setHtml(content)
+     }
+ }
+ 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun GRicheditorViewComposable (
