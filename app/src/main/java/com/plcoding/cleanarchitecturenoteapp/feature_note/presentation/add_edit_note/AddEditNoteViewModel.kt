@@ -156,7 +156,8 @@ class AddEditNoteViewModel @Inject constructor(
             }
 
             is AddEditNoteEvent.ToggleImageSection -> {
-                _showGallery.value = !showGallery.value
+                Log.d(TAG, "ToggleImageSection")
+                // _showGallery.value = !showGallery.value
                 _noteImage.value = noteImage.value.copy(
                     isImageSectionVisible = !noteImage.value.isImageSectionVisible
                 )
@@ -165,9 +166,9 @@ class AddEditNoteViewModel @Inject constructor(
                 _imgUri = imgUri
                 _noteImage.value.uri = imgUri.value
             }
-//            is AddEditNoteEvent.LoadImageUrl -> {
-//                _noteImage.value.url = noteImage.value.url
-//            }
+           is AddEditNoteEvent.LoadImageUrl -> {
+               _noteImage.value.url = noteImage.value.url
+           }
             is AddEditNoteEvent.RemoveImage -> {
                 _noteImage.value.uri = noteImage.value.uri
                 _noteImage.value.url = noteImage.value.url

@@ -184,6 +184,7 @@ fun AddEditNoteScreen (
                 }
                 IconButton(
                     onClick = {
+                        Log.d(TAG, "onClick toggleImageSection()")
                         viewModel.onEvent(AddEditNoteEvent.ToggleImageSection)
                         // 这时暂换一下：toggle Preview Mode 不需要设置这样的Mode
                         // Log.d(TAG, "onClick toggleNotePreview()")
@@ -274,12 +275,15 @@ fun AddEditNoteScreen (
             )
             Spacer(modifier = Modifier.height(16.dp))
             // if (!notePreview) {
+                // 暂时隐藏
+                if (!imageState.isImageSectionVisible) {
             GRicheditorViewComposable(
                 modifier = Modifier
                     .fillMaxWidth(),
                 colorState.color,
                 viewModel
             )
+                }
                 // // 现在，我不想要这个东西了，想要改回传统自定义视图的多功能实现版块
                 // TransparentHintTextField(
                 //     text = contentState.text,
@@ -314,7 +318,7 @@ fun AddEditNoteScreen (
                     modifier = Modifier
                         .fillMaxWidth()
                     // .fillMaxHeight()
-                        .padding(top = 8.dp) // adding some space to the label
+                        // .padding(top = 8.dp) // adding some space to the label
                         .background(Color(colorState.color)),
                     viewModel
                 )

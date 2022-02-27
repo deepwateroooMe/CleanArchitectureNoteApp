@@ -19,7 +19,7 @@ sealed class AddEditNoteEvent {
     data class ChangeCusColor(val color: Color): AddEditNoteEvent() //
     
     // 加载图片：先只考虑本地的
-    // data class LoadImageUrl(val url: String): AddEditNoteEvent()
+    data class LoadImageUrl(val url: String): AddEditNoteEvent()
     data class LoadImageUri(val uri: Uri): AddEditNoteEvent()
     object RemoveImage: AddEditNoteEvent()
     // data class RemoveImage(val noteImageState: NoteImageState): AddEditNoteEvent()

@@ -2,17 +2,22 @@ package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import androidx.compose.foundation.focusable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.plcoding.cleanarchitecturenoteapp.databinding.RichEditorLayoutBinding
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.AddEditNoteViewModel
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.EMPTY_IMAGE_URI
 
-val imgURL: String = "https://avatar.csdnimg.cn/1/9/7/1_qq_43143981_1552988521.jpg"
+ val imgURL: String = "https://avatar.csdnimg.cn/1/9/7/1_qq_43143981_1552988521.jpg"
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -20,17 +25,21 @@ fun GRicheditorViewComposable (
     modifier: Modifier,
     color: Int,
     viewModel: AddEditNoteViewModel
+    // onFocusChange: (FocusState) -> Unit
 ) {
     var isChangedTextColor = remember { mutableStateOf(false) }
     var isChangedBgColor = remember { mutableStateOf(false) }
 
-    // 这里需要对于开放一下mEditor.setText()方法，方便便签加载的时候调用
     AndroidViewBinding(RichEditorLayoutBinding::inflate) {
-        // Set Editor background color to match system design Note background color
+        mEditor.setEditorHeight(100)
         mEditor.setEditorBackgroundColor(color)
         mEditor.setHtml(viewModel.noteContent.value.text)
-        
-        // 这些按钮的显示与否，可以再调控一下, hasFocus() == visible
+        // 这些按钮的显示与否，可以再调控一下, hasFocus() == visible 这里目前还没有设置对
+        // viewTreeObserver.addOnGlobalFocusChangeListener { _, _ -> richBtns.setVisible(hasFocus()) }
+        modifier.onFocusEvent() {
+            richBtns.isVisible = true
+        }
+    
         actionUndo.setOnClickListener() {
             mEditor.undo()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
@@ -119,11 +128,13 @@ fun GRicheditorViewComposable (
             mEditor.setBlockquote() 
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
-        // // 这里也需要跟之前完成的内容连接起来
-        // actionInsertImage.setOnClickListener() {
-        //     mEditor.insertImage(viewModel.)
-        //     viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
-        // }
+        // // 这里需要跟之前完成的内容连接起来: 这里加载的是网络图片，相机等加载的是本机内容，两个都需要
+        actionInsertImage.setOnClickListener() {
+            val url = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
+            viewModel.onEvent(AddEditNoteEvent.LoadImageUrl(url))
+            mEditor.insertImage(viewModel.noteImage.value.url, "", 150)
+            // bug: Note: url没有保存好，或是没能加载好
+        }
 
         actionInsertAudio.setOnClickListener() {
             mEditor.insertAudio("https://file-examples-com.github.io/uploads/2017/11/fileexampleMP35MG.mp3")
@@ -144,10 +155,10 @@ fun GRicheditorViewComposable (
             mEditor.insertTodo() 
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
-        actionInsertImage.setOnClickListener() {
-            mEditor.insertImage(imgURL, "", 320)
-            viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
-        }
+        // actionInsertImage.setOnClickListener() {
+        //     mEditor.insertImage(imgURL, "", 320)
+        //     viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
+        // }
         actionTxtColor.setOnClickListener() {
             mEditor.setTextColor(if (isChangedTextColor.value) Color.BLACK else Color.RED)
             isChangedTextColor.value = !isChangedTextColor.value
