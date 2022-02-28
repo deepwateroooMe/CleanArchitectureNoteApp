@@ -16,8 +16,9 @@ import com.plcoding.cleanarchitecturenoteapp.databinding.RichEditorLayoutBinding
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.AddEditNoteViewModel
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.EMPTY_IMAGE_URI
+import jp.wasabeef.richeditor.RichEditor.OnTextChangeListener
 
- val imgURL: String = "https://avatar.csdnimg.cn/1/9/7/1_qq_43143981_1552988521.jpg"
+val imgURL: String = "https://avatar.csdnimg.cn/1/9/7/1_qq_43143981_1552988521.jpg"
 
  @Composable
  fun GRicheditorViewComposable (
@@ -48,12 +49,15 @@ fun GRicheditorViewComposable (
         mEditor.setEditorHeight(100)
         mEditor.setEditorBackgroundColor(color)
         mEditor.setHtml(viewModel.noteContent.value.text)
+        mEditor.setOnTextChangeListener() {
+            viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
+        }
         // 这些按钮的显示与否，可以再调控一下, hasFocus() == visible 这里目前还没有设置对
         // viewTreeObserver.addOnGlobalFocusChangeListener { _, _ -> richBtns.setVisible(hasFocus()) }
         modifier.onFocusEvent() {
             richBtns.isVisible = true
         }
-    
+
         actionUndo.setOnClickListener() {
             mEditor.undo()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
@@ -63,27 +67,27 @@ fun GRicheditorViewComposable (
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionBold.setOnClickListener() {
-            mEditor.setBold() 
+            mEditor.setBold()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionItalic.setOnClickListener() {
-            mEditor.setItalic() 
+            mEditor.setItalic()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionSubscript.setOnClickListener() {
-            mEditor.setSubscript() 
+            mEditor.setSubscript()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionSuperscript.setOnClickListener() {
-            mEditor.setSuperscript() 
+            mEditor.setSuperscript()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionStrikethrough.setOnClickListener() {
-            mEditor.setStrikeThrough() 
+            mEditor.setStrikeThrough()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionUnderline.setOnClickListener() {
-            mEditor.setUnderline() 
+            mEditor.setUnderline()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionHeading1.setOnClickListener() {
@@ -111,40 +115,41 @@ fun GRicheditorViewComposable (
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionIndent.setOnClickListener() {
-            mEditor.setIndent() 
+            mEditor.setIndent()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionOutdent.setOnClickListener() {
-            mEditor.setOutdent() 
+            mEditor.setOutdent()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionAlignLeft.setOnClickListener() {
-            mEditor.setAlignLeft() 
+            mEditor.setAlignLeft()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionAlignCenter.setOnClickListener() {
-            mEditor.setAlignCenter() 
+            mEditor.setAlignCenter()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionAlignRight.setOnClickListener() {
-            mEditor.setAlignRight() 
+            mEditor.setAlignRight()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionInsertBullets.setOnClickListener() {
-            mEditor.setBullets() 
+            mEditor.setBullets()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionInsertNumbers.setOnClickListener() {
-            mEditor.setNumbers() 
+            mEditor.setNumbers()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionBlockquote.setOnClickListener() {
-            mEditor.setBlockquote() 
+            mEditor.setBlockquote()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         // // 这里需要跟之前完成的内容连接起来: 这里加载的是网络图片，相机等加载的是本机内容，两个都需要
         actionInsertImage.setOnClickListener() {
-            val url = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
+            val url =
+                "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
             viewModel.onEvent(AddEditNoteEvent.LoadImageUrl(url))
             mEditor.insertImage(viewModel.noteImage.value.url, "", 150)
             // bug: Note: url没有保存好，或是没能加载好
@@ -166,7 +171,7 @@ fun GRicheditorViewComposable (
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         actionInsertCheckbox.setOnClickListener() {
-            mEditor.insertTodo() 
+            mEditor.insertTodo()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
         // actionInsertImage.setOnClickListener() {
