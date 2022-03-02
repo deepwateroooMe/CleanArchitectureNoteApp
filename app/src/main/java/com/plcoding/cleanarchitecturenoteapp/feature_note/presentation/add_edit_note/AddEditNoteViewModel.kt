@@ -49,9 +49,6 @@ class AddEditNoteViewModel @Inject constructor(
     private val _noteCusColor = mutableStateOf<Int>(-1)
     val noteCusColor: State<Int> = _noteCusColor
 
-    // private val _gifId = mutableStateOf<String>("e461273")
-    // val gifId: State<String> = _gifId
-
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -84,7 +81,6 @@ class AddEditNoteViewModel @Inject constructor(
                             // 这里需要一步处理：将html文本转化为RichEditor的spanned string
                             _noteContent.value = noteContent.value.copy(
                                  text = note.content,
-//                                text =
                                 isHintVisible = false
                             )
                             _noteColor.value = noteColor.value.copy(
@@ -93,11 +89,17 @@ class AddEditNoteViewModel @Inject constructor(
                                 cusColor = note.cusColor
                             )
                             _noteCusColor.value = note.cusColor
-                            if (note.url != null || note.uri != "") {
+                            Log.d(TAG, "(note.uri != ''): " + (note.uri != ""))
+                            // if (note.url != null || note.uri != "") {
+                                val tmp = Uri.parse(note.uri)
+                                Log.d(TAG, "(tmp != EMPTY_IMAGE_URI): " + (tmp != EMPTY_IMAGE_URI))
+                            if (note.uri != "") {
                                 _noteImage.value.uri = Uri.parse(note.uri)
-                                imgUri.value = Uri.parse(note.uri)
+                                // imgUri.value = Uri.parse(note.uri)
+                                imgUri.value = _noteImage.value.uri
+                                Log.d(TAG, "imgUri.value.toString(): " + imgUri.value.toString())
                                 _noteImage.value.isImageSectionVisible = note.isImageSectionVisible
-                                _noteImage.value.url = note.url
+                                // _noteImage.value.url = note.url
                             }
                         }
                     }
@@ -117,10 +119,9 @@ class AddEditNoteViewModel @Inject constructor(
                                 color = noteColor.value.color,
                                 isColorSectionVisible = noteColor.value.isColorSectionVisible,
                                 cusColor = noteCusColor.value,
-                                // uri = noteImage.value.uri.toString(), // 这里保存的是uri string，但加载的时候
                                 uri = imgUri.value.toString(),
                                 isImageSectionVisible = noteImage.value.isImageSectionVisible,
-                                url = noteImage.value.url, // 这里保存的是url string，但加载的时候
+                                 // url = noteImage.value.url, // 这里保存的是url string，但加载的时候
                                 id = currentNoteId
                             )
                         )
@@ -163,8 +164,9 @@ class AddEditNoteViewModel @Inject constructor(
                 )
             }
             is AddEditNoteEvent.LoadImageUri -> {
-                _imgUri = imgUri
-                _noteImage.value.uri = imgUri.value
+                _imgUri.value = event.uri
+                imgUri.value = _imgUri.value
+                _noteImage.value.uri = _imgUri.value
             }
            is AddEditNoteEvent.LoadImageUrl -> {
                _noteImage.value.url = noteImage.value.url
@@ -200,23 +202,6 @@ class AddEditNoteViewModel @Inject constructor(
         }
     }
 
-//    suspend fun processAnnotations(text: CharSequence?) {
-//        return if (text is SpannedString) {
-//            withContext(Dispatchers.IO) {
-//                val spannableStringBuilder = SpannableStringBuilder(text)
-//                text.getSpans(0, text.length, Annotation::class.java)
-//                    .filter { it.key == "format" && it.value == "bold" }
-//                    .forEach { annotation ->
-//                                   spannableStringBuilder[text.getSpanStart(annotation)..text.getSpanEnd(annotation)] =
-//                                   StyleSpan(Typeface.BOLD)
-//                    }
-//                spannableStringBuilder.toSpannable()
-//            }
-//        } else {
-//            text
-//        }
-//    }
-    
     sealed class UiEvent {
         data class ShowSnackbar(val message: String): UiEvent()
         object SaveNote: UiEvent()

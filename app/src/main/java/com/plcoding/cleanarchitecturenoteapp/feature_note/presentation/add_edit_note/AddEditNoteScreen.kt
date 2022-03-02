@@ -184,11 +184,7 @@ fun AddEditNoteScreen (
                 }
                 IconButton(
                     onClick = {
-                        Log.d(TAG, "onClick toggleImageSection()")
                         viewModel.onEvent(AddEditNoteEvent.ToggleImageSection)
-                        // 这时暂换一下：toggle Preview Mode 不需要设置这样的Mode
-                        // Log.d(TAG, "onClick toggleNotePreview()")
-                        // viewModel.onEvent(AddEditNoteEvent.ToggleNotePreview)
                     },
                 ) {
                     Icon(
@@ -225,39 +221,6 @@ fun AddEditNoteScreen (
                     }
                 )
             }
-            // // 设置编辑状态下的可选用便捷按钮,preview状态下隐藏: 这些都不需要了
-            // AnimatedVisibility(
-            //     visible = !notePreview,
-            //     enter = fadeIn() + slideInVertically(),
-            //     exit = fadeOut() + slideOutVertically()
-            // ) {
-            //     Row(
-            //         modifier = Modifier
-            //             .fillMaxWidth()
-            //             .padding(2.dp), // 8.dp
-            //         horizontalArrangement = Arrangement.SpaceBetween
-            //     ) {
-            //         Note.noteCommands.forEach {
-            //             color ->
-            //             Box(
-            //                 modifier = Modifier
-            //                     .weight(0.3f)
-            //                     .height(32.dp)
-            //                     .shadow(15.dp, RectangleShape)
-            //                     .clip(RoundedCornerShape(10.dp)) // RectangleShape
-            //                     .background(Color.White)
-            //                     .clickable {
-            //                     }
-            //             )  {
-            //                 Text(text = color,
-            //                      color = MaterialTheme.colors.primary,
-            //                      fontSize = 27.sp,
-            //                      modifier = Modifier.align(Alignment.Center)
-            //                 )
-            //             }
-            //         }
-            //     }
-            // }
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = titleState.text,
@@ -274,16 +237,14 @@ fun AddEditNoteScreen (
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
-            // if (!notePreview) {
-                // 暂时隐藏
-                if (!imageState.isImageSectionVisible) {
-            GRicheditorViewComposable(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colorState.color,
-                viewModel
-            )
-                }
+            if (!imageState.isImageSectionVisible) {
+                GRicheditorViewComposable(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colorState.color,
+                    viewModel
+                )
+            }
                 // // 现在，我不想要这个东西了，想要改回传统自定义视图的多功能实现版块
                 // TransparentHintTextField(
                 //     text = contentState.text,
@@ -314,6 +275,7 @@ fun AddEditNoteScreen (
                 //         .padding(vertical = 16.dp),
                 //     R.drawable.love
                 // )
+                Log.d(TAG, "viewModel.imgUri.value.toString(): " + viewModel.imgUri.value.toString())
                 ImageMainContent(
                     modifier = Modifier
                         .fillMaxWidth()

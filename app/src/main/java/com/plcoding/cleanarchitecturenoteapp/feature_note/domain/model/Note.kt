@@ -20,7 +20,7 @@ data class Note(
 
     var uri: String,
     var isImageSectionVisible: Boolean,
-    var url: String,
+    // var url: String,
 
     @PrimaryKey val id: Int? = null
 ) {

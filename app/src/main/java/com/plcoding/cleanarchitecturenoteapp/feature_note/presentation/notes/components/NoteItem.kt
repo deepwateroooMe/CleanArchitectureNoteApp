@@ -1,6 +1,7 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.components
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import coil.compose.rememberImagePainter
+import com.plcoding.cleanarchitecturenoteapp.R
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.EMPTY_IMAGE_URI
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.RichEditText.GRicheditorViewComposable
@@ -41,6 +43,15 @@ fun NoteItem (
     cutCornerSize: Dp = 30.dp,
     onDeleteClick: () -> Unit
 ) {
+    val TAG = "test NoteItem"
+
+    var painter = rememberImagePainter(
+        Uri.parse(note.uri),
+        builder = {
+            placeholder(R.drawable.img)
+        }
+    )
+
     Box(
         modifier = modifier
     ) {
@@ -114,20 +125,27 @@ fun NoteItem (
         //         .fillMaxWidth()
         // ) {
             // 如果有本地图片，这里加上图片
+            Log.d(TAG, "note.uri: " + note.uri)
+            Log.d(TAG, "(Uri.parse(note.uri) != EMPTY_IMAGE_URI): " + (Uri.parse(note.uri) != EMPTY_IMAGE_URI))
             if (Uri.parse(note.uri) != EMPTY_IMAGE_URI) {
+                Log.d(TAG, "painter value: " + painter)
                 Box(
                     modifier = Modifier
 //                        .padding(16.dp)
                         .fillMaxWidth()
                         .align(Alignment.CenterEnd)
                 ) {
+                    // BUG #1: 如果是拍照，第一次可以正常加载；如果是从图库选择的图片，那么保存后退出，再进入，图片加载不成功
+                    // 现在明白：因为使用了rememberImagePainter，所有的notes只会记住并显示最后个note的图片,明白原因，会修改
                     Image(
                         modifier = Modifier
+//                        fillMaxWidth()
                         //                    .width(70.dp)
-                            .size(200.dp)
+                             .size(200.dp) // 200
                         //                    .padding(7.dp)
                             .align(Alignment.CenterEnd),
-                        painter = rememberImagePainter(Uri.parse(note.uri)),
+                        // painter = painter,
+                        painter = ImagePainter()
                         contentDescription = ""
                     )
                 }

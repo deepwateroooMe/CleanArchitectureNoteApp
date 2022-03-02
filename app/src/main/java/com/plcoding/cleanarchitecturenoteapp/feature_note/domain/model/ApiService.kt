@@ -1,4 +1,4 @@
-package com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model
+// npackage com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model
 
 import retrofit2.http.GET
 
