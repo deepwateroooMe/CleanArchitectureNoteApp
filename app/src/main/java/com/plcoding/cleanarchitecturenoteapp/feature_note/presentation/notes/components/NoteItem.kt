@@ -96,7 +96,6 @@ fun NoteItem (
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(8.dp))
-            // 想要使用这个东西，但需要修改
             GRicheditorViewComposable(
                 modifier = Modifier,
                 // .fillMaxWidth(),
@@ -135,7 +134,6 @@ fun NoteItem (
                     )
                 }
         }
-        // 这里还是删除按钮
         IconButton(
             onClick = onDeleteClick,
             modifier = Modifier.align(Alignment.BottomEnd)

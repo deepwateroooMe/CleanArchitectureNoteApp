@@ -244,14 +244,17 @@ fun AddEditNoteScreen (
             if (!imageState.isImageSectionVisible) {
                 GRicheditorViewComposable(
                     modifier = Modifier
-                        .fillMaxWidth()
-                    .focusRequester(focusRequester),
+                        .fillMaxWidth(),
+                    // .focusRequester(focusRequester),
                     colorState.color,
-                    viewModel
+                    viewModel,
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+                    },
                 )
-//                LaunchedEffect(Unit) {
-//                    focusRequester.requestFocus()
-//                }
+                //                LaunchedEffect(Unit) {
+                    //                    focusRequester.requestFocus()
+                    //                }
             }
                 // // 现在，我不想要这个东西了，想要改回传统自定义视图的多功能实现版块
                 // TransparentHintTextField(

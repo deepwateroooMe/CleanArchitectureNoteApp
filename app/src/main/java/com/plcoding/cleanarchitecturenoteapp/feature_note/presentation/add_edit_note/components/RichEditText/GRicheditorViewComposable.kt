@@ -32,29 +32,32 @@ val imgURL: String = "https://avatar.csdnimg.cn/1/9/7/1_qq_43143981_1552988521.j
          mEditor.setEditorHeight(100)
          mEditor.setEditorBackgroundColor(color)
          mEditor.setHtml(content)
+         // 这里只取其富文本显示功能，不可编辑，但点击事件可以设置得更为智能一点儿，软键盘很难用
+         mEditor.setInputEnabled(false)
      }
  }
-
-
  
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun GRicheditorViewComposable (
     modifier: Modifier,
     color: Int,
-    viewModel: AddEditNoteViewModel
+    viewModel: AddEditNoteViewModel,
     onFocusChange: (FocusState) -> Unit
 ) {
     var isChangedTextColor = remember { mutableStateOf(false) }
     var isChangedBgColor = remember { mutableStateOf(false) }
+    
     AndroidViewBinding(RichEditorLayoutBinding::inflate) {
-//        mEditor.setEditorHeight(100) // 我不想再限制它的高了
         mEditor.setEditorBackgroundColor(color)
         mEditor.setHtml(viewModel.noteContent.value.text)
         mEditor.setOnTextChangeListener() {
             viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
-            // BUG #2: 这里可以如此设置显示，稍显笨拙；可是要如何设置隐藏呢？
+            // BUG #2: 这里可以如此设置显示，稍显笨拙；可是要如何设置隐藏呢？不知道该如何自动检测聚焦事件
+            // 这里的事件传递方向，应该是自这个composable向外传递
             if (!richBtns.isVisible) richBtns.isVisible = true
+            // mEditor.focusEditor() mEditor.clearFocusEditor() 不知道怎么用
+
         }
         // 这些按钮的显示与否，可以再调控一下, hasFocus() == visible 这里目前还没有设置对
         // viewTreeObserver.addOnGlobalFocusChangeListener { _, _ -> richBtns.setVisible(hasFocus()) } // 安卓原生view里的方法
@@ -159,15 +162,11 @@ fun GRicheditorViewComposable (
             mEditor.setBlockquote()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
-        // // 这里需要跟之前完成的内容连接起来: 这里加载的是网络图片，相机等加载的是本机内容，两个都需要
         actionInsertImage.setOnClickListener() {
-            val url =
-                "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
+            val url = "https://nyc3.digitaloceanspaces.com/food2fork/food2fork-static/featured_images/500/featured_image.png"
             viewModel.onEvent(AddEditNoteEvent.LoadImageUrl(url))
             mEditor.insertImage(viewModel.noteImage.value.url, "", 150)
-            // bug: Note: url没有保存好，或是没能加载好
         }
-
         actionInsertAudio.setOnClickListener() {
             mEditor.insertAudio("https://file-examples-com.github.io/uploads/2017/11/fileexampleMP35MG.mp3")
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
@@ -187,10 +186,6 @@ fun GRicheditorViewComposable (
             mEditor.insertTodo()
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
-        // actionInsertImage.setOnClickListener() {
-        //     mEditor.insertImage(imgURL, "", 320)
-        //     viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
-        // }
         actionTxtColor.setOnClickListener() {
             mEditor.setTextColor(if (isChangedTextColor.value) Color.BLACK else Color.RED)
             isChangedTextColor.value = !isChangedTextColor.value
@@ -202,7 +197,7 @@ fun GRicheditorViewComposable (
             viewModel.onEvent((AddEditNoteEvent.EnteredContent(mEditor.html)))
         }
 
-        mEditor.setPlaceholder("开始你的创作")
+        mEditor.setPlaceholder("Enter some content...")
         mEditor.setPadding(8, 8, 8, 8)
     }
 }
