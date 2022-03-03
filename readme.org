@@ -5,18 +5,35 @@
 
 * Android Compose
 ** current update
-- G Rich Editor Text easy integeration
-   
-   [[./pic/screens7.jpg]]
+- 写到这种程度，我已经想办法解决了我自己想要实现的绝大部分目标：作为一
+  个个性化的练手项目，可以自由的增删加载图片（可以借助第三方库增删本机
+  图片），可以实现富文本编辑
+- 关于BUG的部分：如果能够加载网络图片，能够实现Note文本部分的富文本编
+  辑已经算是一个很好的Note了，但是因为自己最初是想过加载本地图片的，并
+  实现了图库相机的权限管理部分，所以对本地图片的部分并没有删除，这里并
+  引入了一下bug #1: 当我使用coil库rememberImagePainter加载Uri文件的时
+  候，在launch主界面NotesScreen里，会永远是最久远的Note的本地图片才能
+  显示，因为它最后加载，覆盖了之前的所有的内容（每一个有本地图片的Note
+  的加载应该是需要在它自己民的scope里去加载）；另整合的第三方库的
+  GRicheditorView聚焦事件还没有处理彻底，会take my time慢慢把这两个bug修
+  复
+- 安卓的世界不只有compose，这是一次很好的练习，接下来会配置好emacs的
+  kotlin-mode,会练习kotlin编程，会练习mvvm以及拓展现在安卓知识面的深度，
+  会在安卓的世界里拓展拓深。。。。。。
+  
+[[./pic/screens8.png]]
 
-- will finish linking and clean up the rest:
-- 关于图片加载部分，原库只（再double check一下）加载网络图片，并用网络
-  javascript处理，原项目中实现过的地地图片与拍照等只能忍痛每个Note只能
-  加载一张本机图片了，并且固定文末，不可文中随意加载。。。
 ** TOTO: 
 - 这个项目的目标暂时定在这里，clean up之后暂放一下（gif的部分，因为整
   合了第三方库都暂不作考虑了），改天有新的想法再整合实现和修改
 ** prev updates
+- G Rich Editor Text easy integeration
+   
+   [[./pic/screens7.jpg]]
+
+- 关于图片加载部分，原库只（再double check一下）加载网络图片，并用网络
+  javascript处理，原项目中实现过的地地图片与拍照等只能忍痛每个Note只能
+  加载一张本机图片了，并且固定文末，不可文中随意加载。。。
    
    [[./pic/screens6.jpg]]
 

@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.view.isInvisible
@@ -42,23 +43,33 @@ fun GRicheditorViewComposable (
     modifier: Modifier,
     color: Int,
     viewModel: AddEditNoteViewModel
-    // onFocusChange: (FocusState) -> Unit
+    onFocusChange: (FocusState) -> Unit
 ) {
     var isChangedTextColor = remember { mutableStateOf(false) }
     var isChangedBgColor = remember { mutableStateOf(false) }
-
     AndroidViewBinding(RichEditorLayoutBinding::inflate) {
-        mEditor.setEditorHeight(100)
+//        mEditor.setEditorHeight(100) // 我不想再限制它的高了
         mEditor.setEditorBackgroundColor(color)
         mEditor.setHtml(viewModel.noteContent.value.text)
         mEditor.setOnTextChangeListener() {
             viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
+            // BUG #2: 这里可以如此设置显示，稍显笨拙；可是要如何设置隐藏呢？
+            if (!richBtns.isVisible) richBtns.isVisible = true
         }
         // 这些按钮的显示与否，可以再调控一下, hasFocus() == visible 这里目前还没有设置对
-        // viewTreeObserver.addOnGlobalFocusChangeListener { _, _ -> richBtns.setVisible(hasFocus()) }
-        modifier.onFocusEvent() {
-            richBtns.isVisible = true
-        }
+        // viewTreeObserver.addOnGlobalFocusChangeListener { _, _ -> richBtns.setVisible(hasFocus()) } // 安卓原生view里的方法
+        // modifier.onFocusChanged { focusState ->
+        //     when {
+        //         focusState.isFocused ->
+        //             richBtns.isVisible = true
+        //         focusState.hasFocus ->
+        //             richBtns.isVisible = true
+        //             // println("A child of mine has focus!")
+        //     }
+        // }
+        // modifier.onFocusEvent() {
+        //     richBtns.isVisible = true
+        // }
 
         actionUndo.setOnClickListener() {
             mEditor.undo()

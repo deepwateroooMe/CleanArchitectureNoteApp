@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -237,13 +239,19 @@ fun AddEditNoteScreen (
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            val focusRequester = remember { FocusRequester() }
             if (!imageState.isImageSectionVisible) {
                 GRicheditorViewComposable(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                    .focusRequester(focusRequester),
                     colorState.color,
                     viewModel
                 )
+//                LaunchedEffect(Unit) {
+//                    focusRequester.requestFocus()
+//                }
             }
                 // // 现在，我不想要这个东西了，想要改回传统自定义视图的多功能实现版块
                 // TransparentHintTextField(

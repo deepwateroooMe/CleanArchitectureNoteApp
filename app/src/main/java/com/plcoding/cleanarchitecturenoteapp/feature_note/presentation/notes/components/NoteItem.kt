@@ -1,5 +1,6 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.components
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Canvas
@@ -11,7 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
@@ -23,18 +24,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import coil.compose.rememberImagePainter
-import com.plcoding.cleanarchitecturenoteapp.R
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.EMPTY_IMAGE_URI
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.RichEditText.GRicheditorViewComposable
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.NotesEvent
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.MyImage
 
+@SuppressLint("UnrememberedMutableState")
 @Composable // 每条便签在主界面中的显示界面
 fun NoteItem (
     note: Note,
@@ -44,13 +47,8 @@ fun NoteItem (
     onDeleteClick: () -> Unit
 ) {
     val TAG = "test NoteItem"
-
-    var painter = rememberImagePainter(
-        Uri.parse(note.uri),
-        builder = {
-            placeholder(R.drawable.img)
-        }
-    )
+    // val painter = rememberImagePainter(painterUri.value)
+    var painterUri = mutableStateOf(EMPTY_IMAGE_URI) // 全局变量
 
     Box(
         modifier = modifier
@@ -80,12 +78,6 @@ fun NoteItem (
                 )
             }
         }
-        // 这里的条件判断不太好
-        // if (Uri.parse(note.uri) == EMPTY_IMAGE_URI) {
-        // Row(
-        //     modifier = Modifier
-        //     // .fillMaxWidth()
-        // ) {
         Column(
             modifier = (if (Uri.parse(note.uri) == EMPTY_IMAGE_URI) Modifier
                             .fillMaxSize()
@@ -120,47 +112,38 @@ fun NoteItem (
                 // )
         }
         Spacer(modifier = Modifier.width(16.dp))
-        // Column(
-        //     modifier = Modifier
-        //         .fillMaxWidth()
-        // ) {
-            // 如果有本地图片，这里加上图片
-            Log.d(TAG, "note.uri: " + note.uri)
-            Log.d(TAG, "(Uri.parse(note.uri) != EMPTY_IMAGE_URI): " + (Uri.parse(note.uri) != EMPTY_IMAGE_URI))
-            if (Uri.parse(note.uri) != EMPTY_IMAGE_URI) {
-                Log.d(TAG, "painter value: " + painter)
+        // Log.d(TAG, "(Uri.parse(note.uri) != EMPTY_IMAGE_URI): " + (Uri.parse(note.uri) != EMPTY_IMAGE_URI))
+        if (Uri.parse(note.uri) != EMPTY_IMAGE_URI) {
+            //            LaunchedEffect(painterUri) {
+                painterUri.value = Uri.parse(note.uri)
+                // MyImage(painterUri.value, Modifier)
                 Box(
                     modifier = Modifier
-//                        .padding(16.dp)
                         .fillMaxWidth()
                         .align(Alignment.CenterEnd)
                 ) {
-                    // BUG #1: 如果是拍照，第一次可以正常加载；如果是从图库选择的图片，那么保存后退出，再进入，图片加载不成功
-                    // 现在明白：因为使用了rememberImagePainter，所有的notes只会记住并显示最后个note的图片,明白原因，会修改
                     Image(
                         modifier = Modifier
-//                        fillMaxWidth()
+                        //                        fillMaxWidth()
                         //                    .width(70.dp)
-                             .size(200.dp) // 200
+                            .size(200.dp) // 200
                         //                    .padding(7.dp)
                             .align(Alignment.CenterEnd),
-                        // painter = painter,
-                        painter = ImagePainter()
+                        // 这里引入了bug
+                        painter = rememberImagePainter(painterUri.value),
                         contentDescription = ""
                     )
                 }
-            }
-            // 这里还是删除按钮
-            IconButton(
-                onClick = onDeleteClick,
-                modifier = Modifier.align(Alignment.BottomEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete note"
-                )
-            }
-        // }
-    // }
+        }
+        // 这里还是删除按钮
+        IconButton(
+            onClick = onDeleteClick,
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete note"
+            )
+        }
     }
 }

@@ -13,10 +13,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role.Companion.Image
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
@@ -37,16 +39,15 @@ fun ImageMainContent(
     val TAG = "test ImageMainContent"
 
     if (viewModel.imgUri.value != EMPTY_IMAGE_URI) {
-        Log.d(TAG, "viewModel.imgUri.value: " + viewModel.imgUri.value)
+        // Log.d(TAG, "viewModel.imgUri.value: " + viewModel.imgUri.value)
         var painter = rememberImagePainter(viewModel.imgUri.value)
-        Log.d(TAG, "(painter == null): " + (painter == null))
-        Log.d(TAG, "painter.value: " + painter)
+        // Log.d(TAG, "(painter == null): " + (painter == null))
+        // Log.d(TAG, "painter.value: " + painter)
         // 已经有了用户自=定义的图片了，显示图片，并显示删除重加选择
         Box(modifier = modifier) {
             Image(
                 modifier = Modifier.fillMaxWidth(),
-               // painter = rememberImagePainter(viewModel.imgUri.value),
-                painter = painter,
+               painter = painter,
                 contentDescription = "Captured image"
             )
             Button(
