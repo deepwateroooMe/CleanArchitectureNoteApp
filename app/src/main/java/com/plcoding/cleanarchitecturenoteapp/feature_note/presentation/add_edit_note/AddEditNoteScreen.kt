@@ -247,10 +247,10 @@ fun AddEditNoteScreen (
                         .fillMaxWidth(),
                     // .focusRequester(focusRequester),
                     colorState.color,
-                    viewModel,
-                    onFocusChange = {
-                        viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                    },
+                    viewModel
+//                    onFocusChange = {
+//                        viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+//                    },
                 )
                 //                LaunchedEffect(Unit) {
                     //                    focusRequester.requestFocus()

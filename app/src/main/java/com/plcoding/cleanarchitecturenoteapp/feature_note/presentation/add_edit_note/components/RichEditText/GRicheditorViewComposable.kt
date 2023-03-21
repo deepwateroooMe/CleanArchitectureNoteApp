@@ -2,6 +2,7 @@ package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.util.Log
 import androidx.compose.foundation.focusable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -43,8 +44,10 @@ fun GRicheditorViewComposable (
     modifier: Modifier,
     color: Int,
     viewModel: AddEditNoteViewModel,
-    onFocusChange: (FocusState) -> Unit
+    // onFocusChange: (FocusState) -> Unit
 ) {
+    val TAG = "test GRicheditorViewComposable"
+
     var isChangedTextColor = remember { mutableStateOf(false) }
     var isChangedBgColor = remember { mutableStateOf(false) }
     
@@ -57,22 +60,25 @@ fun GRicheditorViewComposable (
             // 这里的事件传递方向，应该是自这个composable向外传递
             if (!richBtns.isVisible) richBtns.isVisible = true
             // mEditor.focusEditor() mEditor.clearFocusEditor() 不知道怎么用
-
         }
         // 这些按钮的显示与否，可以再调控一下, hasFocus() == visible 这里目前还没有设置对
         // viewTreeObserver.addOnGlobalFocusChangeListener { _, _ -> richBtns.setVisible(hasFocus()) } // 安卓原生view里的方法
-        // modifier.onFocusChanged { focusState ->
-        //     when {
-        //         focusState.isFocused ->
-        //             richBtns.isVisible = true
-        //         focusState.hasFocus ->
-        //             richBtns.isVisible = true
-        //             // println("A child of mine has focus!")
-        //     }
-        // }
-        // modifier.onFocusEvent() {
-        //     richBtns.isVisible = true
-        // }
+//         modifier.onFocusChanged { focusState ->
+//             when {
+//                 focusState.isFocused -> {
+//                     Log.d(TAG, "isFocused")
+//                     richBtns.isVisible = true
+//                 }
+// //                focusState.hasFocus ->
+// //                    Log.d(TAG, "hasFocus")
+// //                    richBtns.isVisible = true
+//                     // println("A child of mine has focus!")
+//             }
+//         }
+// modifier.onFocusEvent() {
+//     Log.d(TAG, "onFocusEvent")
+//             richBtns.isVisible = true
+//         }
 
         actionUndo.setOnClickListener() {
             mEditor.undo()

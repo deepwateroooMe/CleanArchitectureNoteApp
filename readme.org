@@ -2,8 +2,8 @@
 #+title: Android Compose
 #+author: deepwaterooo
 
-
 * Android Compose
+- 我找这个先前的相对有点儿代表性的项目找了好久，以为弄丢了。改天有兴趣的时候，可以接着再改一改
 ** current update
 - 写到这种程度，我已经想办法解决了我自己想要实现的绝大部分目标：作为一
   个个性化的练手项目，可以自由的增删加载图片（可以借助第三方库增删本机
