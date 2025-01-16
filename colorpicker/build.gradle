@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    // id 'org.jetbrains.kotlin.android'  // <<<<<<<<<<<<<<<<<<<< 
     // id "org.jetbrains.compose" version "1.0.1"
 }
 
 android {
+    namespace 'com.me.colorpicker'
     compileSdk 31
 
     defaultConfig {
@@ -15,9 +16,14 @@ android {
         consumerProguardFiles "consumer-rules.pro"
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_11
-            targetCompatibility = JavaVersion.VERSION_11
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+            // sourceCompatibility = JavaVersion.VERSION_11
+            // targetCompatibility = JavaVersion.VERSION_11
         }
+        // kotlinOptions {
+        //     jvmTarget = '11'
+        // }
     }
 
     buildTypes {
@@ -32,30 +38,34 @@ android {
     // 以后再遇到这种不能build的问题不要慌，去想到底用到了哪些组件，是否一一包括了
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.5.30'
+        kotlinCompilerVersion compose_version
     }
-
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
-//    kotlinOptions {
-//        jvmTarget = '1.8'
-//    }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-//    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-//    implementation 'androidx.activity:activity-compose:1.3.1'
-
+    implementation "androidx.compose.ui:ui:1.0.3"
+    implementation "androidx.compose.material:material:1.0.3"
+    // implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.0.3"
+    // implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    // implementation 'androidx.activity:activity-compose:1.3.1'
     implementation 'com.github.ajalt.colormath:colormath:3.2.0'
+
+    // // 报错修改前的，备份
+    // implementation 'androidx.core:core-ktx:1.7.0'
+    // implementation 'androidx.appcompat:appcompat:1.4.0'
+    // implementation 'com.google.android.material:material:1.4.0'
+    // implementation "androidx.compose.ui:ui:$compose_version"
+    // implementation "androidx.compose.material:material:$compose_version"
+    // // implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    // implementation "androidx.compose.ui:ui-tooling-preview:1.0.3"
+    // // implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    // // implementation 'androidx.activity:activity-compose:1.3.1'
+    // implementation 'com.github.ajalt.colormath:colormath:3.2.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -63,7 +73,9 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-    // implementation 'androidx.core:core-ktx:1.7.0'
+
+    
+    // implementation 'androidx.core:core-ktx:1.7.0' 
     // implementation 'androidx.appcompat:appcompat:1.4.1'
     // implementation 'com.google.android.material:material:1.5.0'
     // testImplementation 'junit:junit:4.13.2'

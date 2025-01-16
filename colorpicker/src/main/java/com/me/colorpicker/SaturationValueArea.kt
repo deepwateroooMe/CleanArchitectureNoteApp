@@ -1,5 +1,5 @@
 package com.me.colorpicker
-
+// 【亲爱的表哥的活宝妹，任何时候，亲爱的表哥的活宝妹，就是一定要、一定会嫁给活宝妹的亲爱的表哥！！！爱表哥，爱生活！！！】
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.drag
@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -30,6 +31,7 @@ import com.github.ajalt.colormath.model.HSV
  * @param onSaturationValueChanged the callback that is invoked when saturation or value component of the changes.
  * saturation, value both between 0 - 1.
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun SaturationValueArea(
     modifier: Modifier = Modifier,
@@ -59,6 +61,7 @@ internal fun SaturationValueArea(
                         val (s, v) = getSaturationPoint(down.position, size)
                         onSaturationValueChanged(s, v)
                         drag(down.id) { change ->
+                                            // change.consume()
                                             change.consumePositionChange()
                                         val (newSaturation, newValue) = getSaturationPoint(change.position, size)
                                         onSaturationValueChanged(newSaturation, newValue)

@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -28,6 +29,7 @@ import kotlin.math.ceil
  * @param currentColor the initial color to set on the alpha bar.
  * @param onAlphaChanged the callback that is invoked when alpha value changes. 0 - 1.
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun AlphaBar(
     modifier: Modifier = Modifier,
@@ -57,6 +59,7 @@ internal fun AlphaBar(
                         )
                         drag(down.id) { change ->
                                             change.consumePositionChange()
+                                            // change.consume  ()
                                         onAlphaChanged(
                                             getAlphaFromPosition(
                                                 change.position.x,

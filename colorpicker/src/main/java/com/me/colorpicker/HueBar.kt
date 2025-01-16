@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
  * @param currentColor the initial color to set on the hue bar.
  * @param onHueChanged the callback that is invoked when hue value changes. Hue is between 0 - 360.
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun HueBar(
     modifier: Modifier = Modifier,
@@ -40,6 +42,7 @@ internal fun HueBar(
                         val down = awaitFirstDown()
                         onHueChanged(getHueFromPoint(down.position.y, size.height.toFloat()))
                         drag(down.id) { change ->
+                                            // change.consume()
                                             change.consumePositionChange()
                                         onHueChanged(getHueFromPoint(change.position.y, size.height.toFloat()))
                         }
