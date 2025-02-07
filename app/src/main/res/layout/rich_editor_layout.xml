@@ -21,232 +21,232 @@
           android:id="@+id/action_undo"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/undo" />
+      <!-- android:background="@null" -->
 
       <ImageButton
           android:id="@+id/action_redo"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/redo" />
+      <!-- android:background="@null" -->
 
       <ImageButton
           android:id="@+id/action_bold"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/bold" />
+      <!-- android:background="@null" -->
 
       <ImageButton
           android:id="@+id/action_italic"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/italic" />
+      <!-- android:background="@null" -->
 
       <ImageButton
           android:id="@+id/action_subscript"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/subscript" />
+      <!-- android:background="@null" -->
 
       <ImageButton
           android:id="@+id/action_superscript"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/superscript" />
+      <!-- android:background="@null" -->
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_strikethrough"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/strikethrough" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_underline"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/underline" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_heading1"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/h1" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_heading2"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/h2" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_heading3"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/h3" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_heading4"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/h4" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_heading5"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/h5" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_heading6"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/h6" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_txt_color"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/txt_color" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_bg_color"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/bg_color" />
 
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_indent"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/indent" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_outdent"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/outdent" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_align_left"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/justify_left" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_align_center"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/justify_center" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_align_right"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/justify_right" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_insert_bullets"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/bullets" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_insert_numbers"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/numbers" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_blockquote"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/blockquote" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_insert_image"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/insert_image" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_insert_audio"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/music" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_insert_video"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/video" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_insert_link"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@drawable/insert_link" />
 
+      <!-- android:background="@null" -->
       <ImageButton
           android:id="@+id/action_insert_checkbox"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:background="@null"
           android:contentDescription="@null"
           android:src="@android:drawable/checkbox_on_background" />
 
@@ -257,6 +257,8 @@
       android:id="@+id/mEditor"
       android:layout_width="match_parent"
       android:layout_height="500dp"
-      android:background="@null" />
+      />
+  <!-- android:background="@null" -->
+
   <!--      android:layout_weight="1"-->
 </LinearLayout>

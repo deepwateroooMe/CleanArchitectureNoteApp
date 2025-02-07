@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
- 
- <!-- 网络权限: 当用户提供的是网络url的时候 -->
+  <!-- 网络权限: 当用户提供的是网络url的时候 -->
   <uses-permission android:name="android.permission.INTERNET" /> 
   <!-- 相机权限、读取外部图片文件 -->
   <uses-feature android:name="android.hardware.camera" />
