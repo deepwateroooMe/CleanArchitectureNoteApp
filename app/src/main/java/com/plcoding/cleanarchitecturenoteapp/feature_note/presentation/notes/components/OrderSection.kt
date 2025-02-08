@@ -7,50 +7,55 @@ import androidx.compose.ui.unit.dp
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.util.NoteOrder
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.util.OrderType
 
-//@Preview
-@Composable // 排序toggle显示的排序选项界面
-fun OrderSection (
+@Composable
+fun OrderSection(
     modifier: Modifier = Modifier,
     noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending),
     onOrderChange: (NoteOrder) -> Unit
 ) {
-    // 一列三行：文本，日期和颜色
     Column(
-        // modifier = modifier
-            modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            DefaultRadioButton(
+                text = "Title",
+                selected = noteOrder is NoteOrder.Title,
+                onSelect = { onOrderChange(NoteOrder.Title(noteOrder.orderType)) }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            DefaultRadioButton(
+                text = "Date",
+                selected = noteOrder is NoteOrder.Date,
+                onSelect = { onOrderChange(NoteOrder.Date(noteOrder.orderType)) }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            DefaultRadioButton(
+                text = "Color",
+                selected = noteOrder is NoteOrder.Color,
+                onSelect = { onOrderChange(NoteOrder.Color(noteOrder.orderType)) }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
             DefaultRadioButton(
                 text = "Ascending",
                 selected = noteOrder.orderType is OrderType.Ascending,
-                onSelected = { onOrderChange(noteOrder.copy(OrderType.Ascending)) }
+                onSelect = {
+                    onOrderChange(noteOrder.copy(OrderType.Ascending))
+                }
             )
             Spacer(modifier = Modifier.width(8.dp))
             DefaultRadioButton(
-                text = "Desending",
+                text = "Descending",
                 selected = noteOrder.orderType is OrderType.Descending,
-                onSelected = { onOrderChange(noteOrder.copy(OrderType.Descending)) }
+                onSelect = {
+                    onOrderChange(noteOrder.copy(OrderType.Descending))
+                }
             )
         }
-        Spacer(modifier = Modifier.width(8.dp))
-        DefaultRadioButton(
-            text = "Text",
-            selected = noteOrder is NoteOrder.Title,
-            onSelected = { onOrderChange(NoteOrder.Title(noteOrder.orderType)) }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        DefaultRadioButton(
-            text = "Date",
-            selected = noteOrder is NoteOrder.Title,
-            onSelected = { onOrderChange(NoteOrder.Date(noteOrder.orderType)) }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        DefaultRadioButton(
-            text = "Color",
-            selected = noteOrder is NoteOrder.Title,
-            onSelected = { onOrderChange(NoteOrder.Color(noteOrder.orderType)) }
-        )
     }
 }

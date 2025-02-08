@@ -22,6 +22,8 @@ import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.AddEditNoteViewModel
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.EMPTY_IMAGE_URI
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.GallerySelect
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.MyNotesPermissions
 import kotlinx.coroutines.ExperimentalCoroutinesApi

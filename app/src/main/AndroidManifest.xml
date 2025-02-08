@@ -1,42 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-  <!-- 网络权限: 当用户提供的是网络url的时候 -->
-  <uses-permission android:name="android.permission.INTERNET" /> 
-  <!-- 相机权限、读取外部图片文件 -->
-  <uses-feature android:name="android.hardware.camera" />
-  <uses-permission android:name="android.permission.CAMERA" />
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> 
-  <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.plcoding.cleanarchitecturenoteapp">
 
-  <application
-      android:name=".NoteApp"
-      android:allowBackup="true"
-      android:icon="@mipmap/ic_launcher"
-      android:label="@string/app_name"
-      android:roundIcon="@mipmap/ic_launcher_round"
-      android:supportsRtl="true"
-      android:theme="@style/Theme.CleanArchitectureNoteApp">
-   <!-- <provider -->
-   <!--     android:name="androidx.core.content.FileProvider" -->
-   <!--     android:authorities="com.plcoding.cleanarchitecturenoteapp.fileProvider" -->
-   <!--     android:exported="false" -->
-   <!--     android:grantUriPermissions="true"> -->
-   <!--   <meta-data -->
-   <!--       android:name="android.support.FILE_PROVIDER_PATHS" -->
-   <!--       android:resource="@xml/file_paths" /> -->
-   <!-- </provider> -->
-    <!-- singleTop -->
-    <activity
-        android:name=".feature_note.presentation.MainActivity"
-        android:launchMode="singleTop"
-        android:exported="true"
+    <application
+        android:name=".NoteApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
         android:theme="@style/Theme.CleanArchitectureNoteApp">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".feature_note.presentation.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.CleanArchitectureNoteApp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-  </application>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
 </manifest>

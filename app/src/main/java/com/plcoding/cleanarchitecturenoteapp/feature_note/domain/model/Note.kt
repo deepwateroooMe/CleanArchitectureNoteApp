@@ -1,9 +1,9 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model
 
-
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.plcoding.cleanarchitecturenoteapp.ui.*
+import com.plcoding.cleanarchitecturenoteapp.ui.theme.*
+
 
 // color存成Color类型，数据库会出错！！
 @Entity
@@ -33,3 +33,19 @@ data class Note(
 }
 
 class InvalidNoteException(message: String): Exception(message)
+
+
+// @Entity
+// data class Note(
+//     val title: String,
+//     val content: String,
+//     val timestamp: Long,
+//     val color: Int,
+//     @PrimaryKey val id: Int? = null
+// ) {
+//     companion object {
+//         val noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)
+//     }
+// }
+
+// class InvalidNoteException(message: String): Exception(message)

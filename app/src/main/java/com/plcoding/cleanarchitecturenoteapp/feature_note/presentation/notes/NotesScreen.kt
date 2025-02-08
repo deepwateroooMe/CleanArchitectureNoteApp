@@ -18,9 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.components.NoteItem
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.components.NotesViewModel
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.components.OrderSection
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.Screen.AddEditNoteScreen
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.util.Screen
 import kotlinx.coroutines.launch
 
 // 首页主界面
@@ -38,7 +37,7 @@ fun NotesScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(AddEditNoteScreen.route)
+                    navController.navigate(Screen.AddEditNoteScreen.route)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -101,7 +100,7 @@ fun NotesScreen(
                             .fillMaxWidth()
                             .clickable {
                                 navController.navigate(
-                                    AddEditNoteScreen.route +
+                                    Screen.AddEditNoteScreen.route +
                                         "?noteId=${note.id}&noteColor=${note.color}"
                                 )
                             },

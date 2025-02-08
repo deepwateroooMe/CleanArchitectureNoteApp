@@ -17,7 +17,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.EMPTY_IMAGE_URI
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.EMPTY_IMAGE_URI
 
 @Composable
 fun GallerySelect(

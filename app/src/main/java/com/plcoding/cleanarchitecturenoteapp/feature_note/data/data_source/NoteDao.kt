@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
-
     @Query("SELECT * FROM note")
     fun getNotes(): Flow<List<Note>>
 
@@ -18,4 +17,4 @@ interface NoteDao {
 
     @Delete
     suspend fun deleteNote(note: Note)
-} 
+}

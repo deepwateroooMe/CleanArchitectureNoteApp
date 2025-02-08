@@ -3,7 +3,6 @@ package com.plcoding.cleanarchitecturenoteapp.feature_note.domain.repository
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
-// fake version of Repository
 interface NoteRepository {
 
     fun getNotes(): Flow<List<Note>>

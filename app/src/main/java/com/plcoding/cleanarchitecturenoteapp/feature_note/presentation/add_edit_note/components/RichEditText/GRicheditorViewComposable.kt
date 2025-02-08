@@ -16,9 +16,8 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.plcoding.cleanarchitecturenoteapp.databinding.RichEditorLayoutBinding
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.AddEditNoteViewModel
-import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.EMPTY_IMAGE_URI
-import jp.wasabeef.richeditor.RichEditor.OnTextChangeListener
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.AddEditNoteViewModel
+// import jp.wasabeef.richeditor.RichEditor.OnTextChangeListener
 
 val imgURL: String = "https://avatar.csdnimg.cn/1/9/7/1_qq_43143981_1552988521.jpg"
 

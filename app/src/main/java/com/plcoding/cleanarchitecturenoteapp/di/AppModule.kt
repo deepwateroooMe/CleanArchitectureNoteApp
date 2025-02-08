@@ -15,16 +15,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
     @Singleton
     fun provideNoteDatabase(app: Application): NoteDatabase {
         return Room.databaseBuilder(
             app,
-            NoteDatabase::class.java, 
+            NoteDatabase::class.java,
             NoteDatabase.DATABASE_NAME
-        )
-            // .fallbackToDestructiveMigration()
-            .build()
+        ).build()
     }
 
     @Provides
@@ -35,16 +34,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUseCases(repository: NoteRepository): NoteUseCases {
+    fun provideNoteUseCases(repository: NoteRepository): NoteUseCases {
         return NoteUseCases(
             getNotes = GetNotes(repository),
             deleteNote = DeleteNote(repository),
             addNote = AddNote(repository),
             getNote = GetNote(repository)
         )
-    }    
+    }
 }
-// // before upgrade
-// @Database(version = 1,entities = [User::class])
-// // after upgrade
-// @Database(version = 2,entities = [User::class]) 

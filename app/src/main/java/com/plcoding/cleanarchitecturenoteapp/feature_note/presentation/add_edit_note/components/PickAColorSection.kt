@@ -1,27 +1,25 @@
 package com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.me.colorpicker.ClassicColorPicker
-import com.me.colorpicker.HsvColor
-import com.plcoding.cleanarchitecturenoteapp.R
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.colorpicker.ClassicColorPicker
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.add_edit_note.components.colorpicker.HsvColor
 
 // Stateful composable 转换为 Stateless composable 的方法:
 // 一个 State 对象需要使用 2 个函数参数来进行替换：
 //   value: T：由原 state 对象所持有并需要被显示的值。
 //   onValueChange: (T) -> Unit：由原 stateful composable 中会改变原 state 状态变化的代码，以回调方式将改变后的值，同步到持有 state 的 composable 去更新。如果改变状态的回调函数较多，这里也可以接收一个带多个函数的接口作为参数。
 
+@SuppressLint("SuspiciousIndentation")
 @Composable // 排序toggle显示的排序选项界面, 是一个Stateless composable
 fun PickAColorSection (
     modifier: Modifier = Modifier,

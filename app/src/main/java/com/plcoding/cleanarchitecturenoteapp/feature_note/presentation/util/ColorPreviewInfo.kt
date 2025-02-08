@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.me.colorpicker.HsvColor
 
 // 这个文件暂时留着：有个bug，不明白为什么在心形的背后会残留一个圆圈的背影
 @Composable
